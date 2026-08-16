@@ -1,0 +1,423 @@
+/* Oxpull Pro waitlist page. System fonts only, no external requests. */
+
+:root {
+  --paper: #f3f6f2;
+  --ink: #1b2420;
+  --muted: #57645c;
+  --line: #d9e0da;
+  --accent: #1f6b4b;
+  --accent-contrast: #ffffff;
+  --panel: #16201b;
+  --panel-line: #2b3a32;
+  --code: #d6e3da;
+  --code-dim: #7c8f84;
+  --code-commit: #86d7ab;
+  --card: #fbfcfa;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #111713;
+    --ink: #e3eae4;
+    --muted: #93a299;
+    --line: #27312a;
+    --accent: #6fc59a;
+    --accent-contrast: #0d1410;
+    --panel: #0b100d;
+    --panel-line: #222d26;
+    --code: #cfdcd3;
+    --code-dim: #6e8177;
+    --code-commit: #7fd3a6;
+    --card: #161d18;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--paper);
+}
+
+body {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+a {
+  color: var(--accent);
+  text-underline-offset: 3px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ---- header ---- */
+
+.top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 1.5rem 0 0;
+}
+
+.wordmark {
+  font-weight: 650;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+}
+
+.wordmark .pro {
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-left: 0.35rem;
+}
+
+.top-note {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ---- hero ---- */
+
+.hero {
+  padding: 4.5rem 0 0;
+}
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 1rem;
+}
+
+h1 {
+  font-size: clamp(1.9rem, 5.5vw, 2.7rem);
+  line-height: 1.12;
+  letter-spacing: -0.018em;
+  font-weight: 650;
+  margin: 0 0 1.1rem;
+  max-width: 21ch;
+}
+
+.lede {
+  font-size: 1.15rem;
+  max-width: 34rem;
+  margin: 0 0 0.6rem;
+}
+
+.lede strong {
+  font-weight: 600;
+}
+
+.hero-sub {
+  color: var(--muted);
+  max-width: 34rem;
+  margin: 0;
+}
+
+/* ---- signature code panel ---- */
+
+.txn {
+  margin: 2.5rem 0 0;
+}
+
+.txn pre {
+  margin: 0;
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: 10px;
+  padding: 1.35rem 1.5rem;
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 0.845rem;
+  line-height: 1.75;
+  color: var(--code);
+}
+
+.txn .dim {
+  color: var(--code-dim);
+}
+
+.txn .atomic {
+  display: inline-block;
+  border-left: 2px solid var(--code-commit);
+  margin-left: -1.5rem;
+  padding-left: calc(1.5rem - 2px);
+}
+
+.txn .commit {
+  color: var(--code-commit);
+}
+
+.txn figcaption {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 0.7rem;
+}
+
+/* ---- sections ---- */
+
+section {
+  padding: 3.5rem 0 0;
+}
+
+h2 {
+  font-size: 1.35rem;
+  letter-spacing: -0.012em;
+  font-weight: 650;
+  margin: 0 0 1rem;
+}
+
+.bench p {
+  max-width: 36rem;
+  margin: 0 0 0.9rem;
+}
+
+.bench .caveat {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+/* ---- tiers ---- */
+
+.tiers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.1rem;
+  margin-top: 1.6rem;
+}
+
+.tier {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--card);
+  padding: 1.4rem 1.5rem 1.5rem;
+}
+
+.tier.pro-tier {
+  border-color: var(--accent);
+}
+
+.tier h3 {
+  margin: 0;
+  font-size: 1.02rem;
+  font-weight: 650;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.tier .tag {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.pro-tier .tag {
+  color: var(--accent);
+}
+
+.tier ul {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  font-size: 0.94rem;
+}
+
+.tier li {
+  padding: 0.32rem 0 0.32rem 1.25rem;
+  position: relative;
+}
+
+.tier li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.95em;
+  width: 0.45rem;
+  height: 2px;
+  background: var(--accent);
+}
+
+.tier .note {
+  margin: 1.1rem 0 0;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+/* ---- pricing + form ---- */
+
+.price-line {
+  max-width: 36rem;
+  margin: 0 0 0.5rem;
+}
+
+.price-line strong {
+  font-weight: 650;
+}
+
+.signup {
+  margin-top: 1.6rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--card);
+  padding: 1.5rem;
+}
+
+.signup form {
+  display: flex;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+
+.signup label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.signup input[type="email"] {
+  flex: 1 1 14rem;
+  font: inherit;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.signup input[type="email"]::placeholder {
+  color: var(--muted);
+}
+
+.signup button {
+  font: inherit;
+  font-weight: 600;
+  padding: 0.6rem 1.3rem;
+  border: 0;
+  border-radius: 7px;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  cursor: pointer;
+}
+
+.signup button:hover {
+  filter: brightness(1.08);
+}
+
+.signup button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.privacy {
+  margin: 0.9rem 0 0;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+#form-error {
+  margin: 0.9rem 0 0;
+  font-size: 0.92rem;
+  color: #a33d2e;
+}
+
+@media (prefers-color-scheme: dark) {
+  #form-error {
+    color: #e08a7a;
+  }
+}
+
+/* ---- faq ---- */
+
+.faq h3 {
+  font-size: 1rem;
+  font-weight: 650;
+  margin: 1.7rem 0 0.35rem;
+}
+
+.faq p {
+  margin: 0;
+  max-width: 36rem;
+  color: var(--ink);
+}
+
+/* ---- footer ---- */
+
+footer {
+  margin-top: 4.5rem;
+  border-top: 1px solid var(--line);
+  padding: 1.4rem 0 2.5rem;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+footer p {
+  margin: 0.3rem 0;
+}
+
+/* ---- thanks page ---- */
+
+.thanks {
+  padding: 7rem 0 0;
+}
+
+.thanks h1 {
+  max-width: none;
+}
+
+.thanks p {
+  max-width: 34rem;
+}
+
+/* ---- small screens ---- */
+
+@media (max-width: 40rem) {
+  .tiers {
+    grid-template-columns: 1fr;
+  }
+  .hero {
+    padding-top: 3rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

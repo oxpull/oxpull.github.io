@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Oxpull Pro waitlist. A production worker for Django Tasks</title>
+  <meta name="description" content="A database-backed worker for Django's Tasks framework. Transactional enqueue, no broker. Join the waitlist for the Pro tier.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:,">
+</head>
+<body>
+  <div class="wrap">
+
+    <header class="top">
+      <div class="wordmark"><span data-brand>Oxpull</span><span class="pro">Pro</span></div>
+      <div class="top-note">waitlist</div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <p class="eyebrow">django.tasks &middot; Django 6.0+</p>
+        <h1>A production worker for Django Tasks</h1>
+        <p class="lede">Django 6.0 ships the Tasks API, but its built-in backends are for
+          development only. <strong><span data-brand>Oxpull</span></strong> stores the queue in the
+          database you already run and executes tasks with a separate worker process. No broker,
+          no Redis, nothing new to operate.</p>
+        <p class="hero-sub">The part that matters: <code>enqueue()</code> is a plain INSERT on your
+          default connection, so a task enqueued inside <code>transaction.atomic()</code> commits
+          or rolls back together with your business data. A broker architecture cannot do this.
+          There is no window where an order exists without its email task, and no
+          <code>on_commit</code> boilerplate.</p>
+
+        <figure class="txn">
+<pre><code><span class="dim">with</span> transaction.atomic():
+<span class="atomic">    order = Order.objects.create(...)
+    send_confirmation.enqueue(order.pk)</span>
+<span class="dim"># one COMMIT. Both rows exist, or neither does.</span></code></pre>
+          <figcaption>The task row and the order row share a transaction</figcaption>
+        </figure>
+      </section>
+
+      <section class="bench">
+        <h2>Measured, not promised</h2>
+        <p>Against django-tasks-db 0.12 on PostgreSQL 16 (2,000 no-op tasks, three interleaved
+          runs, one machine), <span data-package>django-ox</span> enqueued at 528 to 657 tasks
+          per second versus 447 to 454, and completed the batch at 88 to 90 tasks per second
+          versus 69 to 70 with a single worker. In-transaction enqueue latency was a tie, about
+          half a millisecond at p50 for both.</p>
+        <p class="caveat">No-op benchmarks flatter every queue, so read these as relative, not as
+          capacity planning. The full methodology, all runs including the ones we lost before
+          fixing a worker bug, and the raw per-sample data ship in the repository.</p>
+      </section>
+
+      <section>
+        <h2>Free core, paid scale</h2>
+        <p>The open source worker is the production backend. Pro adds the features that only
+          start to hurt once you have real volume.</p>
+
+        <div class="tiers">
+          <div class="tier">
+            <h3><span data-package>django-ox</span> <span class="tag">BSD-3 &middot; free forever</span></h3>
+            <ul>
+              <li>Durable queue in your existing database</li>
+              <li>Transactional enqueue</li>
+              <li>At-least-once execution, SKIP LOCKED claiming</li>
+              <li>Retries with backoff, per-attempt tracebacks</li>
+              <li>Reaper for tasks from dead workers</li>
+              <li>Graceful drain on SIGTERM</li>
+              <li>Priorities, deferred tasks, multiple queues</li>
+              <li>Recurring schedules, cron syntax</li>
+              <li>Pruning command for finished rows</li>
+            </ul>
+            <p class="note">PostgreSQL, MySQL 8+, and SQLite.</p>
+          </div>
+          <div class="tier pro-tier">
+            <h3><span data-brand>Oxpull</span> Pro <span class="tag">commercial license</span></h3>
+            <ul>
+              <li>Batches: enqueue many, track as one</li>
+              <li>Unique tasks (deduplication)</li>
+              <li>Rate limiting</li>
+              <li>Metrics export, Prometheus and OpenTelemetry</li>
+              <li>Email support from the maintainers</li>
+            </ul>
+            <p class="note">Roadmap after launch: workflows and chains, a web dashboard, encrypted
+              payloads for teams that ask. Delivered from a private package index with a license key. Install
+              stays <code>pip install</code>.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="waitlist">
+        <h2>Pricing, and the waitlist</h2>
+        <p class="price-line">Pro launches at <strong>$399 per year, per company</strong>, flat,
+          self-serve. The price moves toward $995 per year as the feature set fills out, so the
+          waitlist is also the cheap seat: join now, buy at the launch price. Seven-day money-back,
+          no trial keys.</p>
+
+        <div class="signup">
+          <form id="waitlist-form" method="post">
+            <label for="email">Email address</label>
+            <input type="email" id="email" name="email" required autocomplete="email"
+              placeholder="you@company.com">
+            <button type="submit">Join the waitlist</button>
+          </form>
+          <p id="form-error" hidden>That didn't go through. Check the address and try again.</p>
+          <p class="privacy">Your email is used only to tell you when Pro launches. No newsletter,
+            no sharing, no analytics on this page. One line to delete it: reply "remove".</p>
+        </div>
+      </section>
+
+      <section class="faq">
+        <h2>Questions you should ask</h2>
+
+        <h3>What is the license situation?</h3>
+        <p>The worker itself, <span data-package>django-ox</span>, is BSD 3-Clause and stays
+          that way. Pro is separate code under a commercial license, sold per company. The free
+          tier is not a demo; it is the backend the docs mean when they say production systems
+          need a durable queue and a worker process.</p>
+
+        <h3>When does this ship?</h3>
+        <p>The open source worker ships first, within the next month. Pro follows once the core
+          has production miles on it. Waitlist email is the announcement channel for both.</p>
+
+        <h3>Who is behind it?</h3>
+        <p>A small independent software vendor with one product: this one. You will know who
+          maintains it, contracts get signed under the company name, and support answers come
+          from the people who wrote the code.</p>
+
+        <h3>What does support look like?</h3>
+        <p>Open source: GitHub issues, best effort, taken seriously. Pro: email support with a
+          defined response time. If your procurement needs a PO and an invoice instead of a card,
+          that will exist as an enterprise tier when someone asks for it.</p>
+
+        <h3>Do I need Pro to run production?</h3>
+        <p>No. Durability, retries, the reaper, and graceful shutdown are all in the free
+          worker. Pro sells the scale layer: batching, deduplication, rate
+          limiting, metrics export, and someone on the hook to answer.</p>
+      </section>
+    </main>
+
+    <footer>
+      <p><span data-brand>Oxpull</span> is an independent vendor. Not affiliated with the Django
+        Software Foundation.</p>
+      <p>No analytics, no trackers, no cookies on this page. The only request that leaves it is
+        the form you choose to submit.</p>
+    </footer>
+
+  </div>
+  <script src="config.js"></script>
+</body>
+</html>
