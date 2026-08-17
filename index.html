@@ -26,8 +26,8 @@
           no Redis, nothing new to operate.</p>
         <p class="hero-sub">The part that matters: <code>enqueue()</code> is a plain INSERT on your
           default connection, so a task enqueued inside <code>transaction.atomic()</code> commits
-          or rolls back together with your business data. A broker architecture cannot do this.
-          There is no window where an order exists without its email task, and no
+          or rolls back together with your business data. A broker cannot share your database
+          transaction. There is no window where an order exists without its email task, and no
           <code>on_commit</code> boilerplate.</p>
 
         <figure class="txn">
@@ -47,9 +47,9 @@
           versus 69 to 70 with a single worker. In-transaction enqueue latency was a tie, about
           half a millisecond at p50 for both.</p>
         <p>Reliability got the same treatment: 21 minutes of sustained load on PostgreSQL 16,
-          37,802 tasks, while workers were repeatedly SIGKILLed mid-task. Every task reached a
-          terminal state, zero were lost, zero completed twice, and interrupted work was
-          reclaimed inside the documented bound.</p>
+          37,802 tasks, including nine minutes in which workers were repeatedly SIGKILLed
+          mid-task. Every task reached a terminal state, zero were lost, zero completed twice in
+          that run, and interrupted work was reclaimed inside the documented bound.</p>
         <p class="caveat">No-op benchmarks flatter every queue, so read these as relative, not as
           capacity planning. The full methodology, every run, and the raw per-sample data ship in
           the repository.</p>
@@ -74,7 +74,8 @@
               <li>Recurring schedules, cron syntax</li>
               <li>Pruning command for finished rows</li>
             </ul>
-            <p class="note">PostgreSQL, MySQL 8+, and SQLite. Live now:
+            <p class="note">PostgreSQL and SQLite, tested in CI; MySQL 8+ via the same
+              SKIP LOCKED path. Live now:
               <code>pip install django-ox</code> &middot;
               <a href="https://github.com/oxpull/django-ox">GitHub</a> &middot;
               <a href="https://oxpull.github.io/django-ox/">docs</a>.</p>
@@ -110,8 +111,8 @@
             <button type="submit">Join the waitlist</button>
           </form>
           <p id="form-error" hidden>That didn't go through. Check the address and try again.</p>
-          <p class="privacy">Your email is used only to tell you when Pro launches. No newsletter,
-            no sharing, no analytics on this page. One line to delete it: reply "remove".</p>
+          <p class="privacy">Your email is used only to tell you when Pro launches. Reply
+            "remove" and it is deleted.</p>
         </div>
       </section>
 
@@ -126,8 +127,8 @@
 
         <h3>When does this ship?</h3>
         <p>The open source worker is live: <code>pip install django-ox</code>, with
-          <a href="https://oxpull.github.io/django-ox/">documentation here</a>. Pro follows once
-          the core has production miles on it. Waitlist email is the announcement channel.</p>
+          <a href="https://oxpull.github.io/django-ox/">documentation here</a>. Pro follows as
+          the core accumulates production miles. Waitlist email is the announcement channel.</p>
 
         <h3>Who is behind it?</h3>
         <p>An independent software vendor with one product: this one. You will know who
