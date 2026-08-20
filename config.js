@@ -1,22 +1,15 @@
 /* =========================================================================
-   SITE CONFIG. This is the single place to set the final brand.
-   Everything below the CONFIG block is plumbing; you should not
-   need to touch it.
+   Site configuration. Values used across the page in one place.
    ========================================================================= */
 
 const SITE = {
-  /* Commercial product name. Replaces every [BRAND] on the page,
-     including the <title>. Example: "Ox". */
+  /* Commercial product name. */
   BRAND: "Oxpull",
 
-  /* OSS package name as it will appear on PyPI (pip install ...).
-     Name locked 2026-08-13: django-ox. */
+  /* Open source package name, as installed with pip. */
   PACKAGE: "django-ox",
 
-  /* Where the waitlist form posts. Leave "" while deciding; the form
-     then simulates success locally and goes straight to thanks.html.
-     See DEPLOY.md for vetted options. Formspree example:
-     "https://formspree.io/f/YOUR_FORM_ID" */
+  /* Where the waitlist form posts. */
   FORM_ENDPOINT: "https://formspree.io/f/mvkpbwwn",
 };
 
