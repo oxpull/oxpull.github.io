@@ -3,21 +3,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Oxpull Pro waitlist. A production worker for Django Tasks</title>
+  <title>Oxpull Pro waitlist. The production worker for Django Tasks</title>
   <meta name="description" content="A database-backed worker for Django's Tasks framework. Transactional enqueue, no broker. Join the waitlist for the Pro tier.">
   <link rel="canonical" href="https://oxpull.com/">
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Oxpull">
-  <meta property="og:title" content="A production worker for Django Tasks">
+  <meta property="og:title" content="The production worker for Django Tasks">
   <meta property="og:description" content="A database-backed worker for Django's Tasks framework. Transactional enqueue, no broker. Join the waitlist for the Pro tier.">
   <meta property="og:url" content="https://oxpull.com/">
   <meta property="og:image" content="https://oxpull.com/assets/social-card.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="django-ox: Django 6 shipped Tasks, the production worker is missing.">
+  <meta property="og:image:alt" content="django-ox: the production worker for Django Tasks. Your database is the queue.">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="A production worker for Django Tasks">
+  <meta name="twitter:title" content="The production worker for Django Tasks">
   <meta name="twitter:description" content="A database-backed worker for Django's Tasks framework. Transactional enqueue, no broker. Join the waitlist for the Pro tier.">
   <meta name="twitter:image" content="https://oxpull.com/assets/social-card.png">
 
@@ -35,9 +35,9 @@
 
     <main>
       <section class="hero">
-        <p class="eyebrow">django.tasks &middot; Django 6.0+</p>
-        <h1>A production worker for Django Tasks</h1>
-        <p class="lede">Django 6.0 ships the Tasks API, but its built-in backends are for
+        <p class="eyebrow">django.tasks &middot; Django 5.2 LTS+</p>
+        <h1>The production worker for Django Tasks</h1>
+        <p class="lede">Django ships the Tasks API, but its built-in backends are for
           development only. <strong><span data-brand>Oxpull</span></strong> stores the queue in the
           database you already run and executes tasks with a separate worker process. No broker,
           no Redis, nothing new to operate.</p>
@@ -58,15 +58,22 @@
 
       <section class="bench">
         <h2>Measured, not promised</h2>
-        <p>Against django-tasks-db 0.12 on PostgreSQL 16 (2,000 no-op tasks, three interleaved
-          runs, one machine), <span data-package>django-ox</span> enqueued at 528 to 657 tasks
-          per second versus 447 to 454, and completed the batch at 88 to 90 tasks per second
-          versus 69 to 70 with a single worker. In-transaction enqueue latency was a tie, about
-          half a millisecond at p50 for both.</p>
+        <p>Against django-tasks-db 0.12 on PostgreSQL 16 (2,000 no-op tasks, five runs per
+          arm, one machine), <span data-package>django-ox</span> completed the batch at 114.9
+          tasks per second against 103.6 with a single worker. Every one of our five runs
+          beat every one of theirs: our slowest was 112.6, their fastest 105.0.
+          In-transaction enqueue latency was a tie, about six tenths of a millisecond at
+          p50 for both. Enqueue throughput favoured <span data-package>django-ox</span>, but the
+          two ranges touch, so we are not claiming a gap there. At concurrency 4 the
+          result reverses and django-tasks-db is ahead, 346.3 against 328.5 on the mean and wider on the median. The
+          <a href="https://oxpull.com/django-ox/benchmarks/">benchmarks page</a> carries
+          that result and the method behind every figure.</p>
         <p>Reliability got the same treatment: 21 minutes of sustained load on PostgreSQL 16,
-          37,802 tasks, including nine minutes in which workers were repeatedly SIGKILLed
-          mid-task. Every task reached a terminal state, zero were lost, zero completed twice in
-          that run, and interrupted work was reclaimed inside the documented bound.</p>
+          37,804 tasks, including nine minutes in which workers were repeatedly SIGKILLed
+          mid-task. Every task reached a terminal state and none were lost. One task ran
+          twice, because its worker was killed after the work finished but before the result
+          was recorded. That is what at-least-once means. No task ran twice without a kill,
+          and interrupted work was reclaimed inside the documented bound.</p>
         <p class="caveat">No-op benchmarks flatter every queue, so read these as relative, not as
           capacity planning. The full methodology, every run, and the raw per-sample data ship in
           the repository.</p>
@@ -93,18 +100,22 @@
               <li>Stats API and health command</li>
             </ul>
             <p class="note">PostgreSQL, SQLite and MySQL 8, all tested in CI. Live now:
-              <code>pip install django-ox</code> &middot;
+              <code>pip install django-ox</code>, or
+              <code>pip install "django-ox[backport]"</code> on Django 5.2 LTS &middot;
               <a href="https://github.com/oxpull/django-ox">GitHub</a> &middot;
-              <a href="https://oxpull.com/django-ox/">docs</a>.</p>
+              <a href="https://oxpull.com/django-ox/">docs</a> &middot;
+              <a href="https://oxpull.com/django-ox/choosing/">how it compares</a>.</p>
           </div>
           <div class="tier pro-tier">
             <h3><span data-brand>Oxpull</span> Pro <span class="tag">commercial license</span></h3>
             <ul>
               <li>Batches: enqueue many, track as one</li>
               <li>Unique tasks (deduplication)</li>
+              <li>Rate limiting</li>
               <li>Email support from the maintainer</li>
+              <li>Requires Django 6.0 or later</li>
             </ul>
-            <p class="note">Both built and tested. Not yet on sale: the purchase path is still
+            <p class="note">All three are built and tested. Not yet on sale: the purchase path is still
               being set up, and the waitlist below is how to hear when it opens. Delivered from a private
               package index using credentials issued per company, with no licence key and no runtime check
               to break your production. Install stays <code>pip install</code>.</p>
@@ -114,10 +125,8 @@
 
       <section id="waitlist">
         <h2>Pricing, and the waitlist</h2>
-        <p class="price-line">Pro launches at <strong>$399 per year, per company</strong>, flat,
-          self-serve. The price moves toward $995 per year as the feature set fills out, so the
-          waitlist is also the cheap seat: join now, buy at the launch price. Seven-day money-back,
-          no trial keys.</p>
+        <p class="price-line">Pro is planned at <strong>$399 per year, per company</strong>, flat,
+          self-serve. Seven-day money-back, no trial keys.</p>
 
         <div class="signup">
           <form id="waitlist-form" method="post">
@@ -158,9 +167,11 @@
 
         <h3>Do I need Pro to run production?</h3>
         <p>No. Durability, retries, the reaper, and graceful shutdown are all in the free
-          worker, and so are the stats API and the health command. Pro adds two
-          things the free tier does not do: batching and deduplication. Support comes
-          with it.</p>
+          worker, and so are the stats API and the health command. Pro adds three
+          things the free tier does not do: batching, deduplication and rate limiting.
+          Support comes with it. Pro needs Django 6.0 or later. The free worker also
+          runs on Django 5.2 LTS through the <code>django-tasks</code> backport, and
+          Pro does not.</p>
       </section>
     </main>
 
