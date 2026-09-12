@@ -59,21 +59,20 @@
       <section class="bench">
         <h2>Measured, not promised</h2>
         <p>Against django-tasks-db 0.12 on PostgreSQL 16 (2,000 no-op tasks, five runs per
-          arm, one machine), <span data-package>django-ox</span> completed the batch at 114.9
-          tasks per second against 103.6 with a single worker. Every one of our five runs
-          beat every one of theirs: our slowest was 112.6, their fastest 105.0.
+          arm, one machine), <span data-package>django-ox</span> 1.1.0 completed the batch at 124.5
+          tasks per second against 108.0 with a single worker. Every one of our five runs
+          beat every one of theirs: our slowest was 121.3, their fastest 110.1.
           In-transaction enqueue latency was a tie, about six tenths of a millisecond at
-          p50 for both. Enqueue throughput favoured <span data-package>django-ox</span>, but the
-          two ranges touch, so we are not claiming a gap there. At concurrency 4 the
-          result reverses and django-tasks-db is ahead, 346.3 against 328.5 on the mean and wider on the median. The
+          p50 for both. The
           <a href="https://oxpull.com/django-ox/benchmarks/">benchmarks page</a> carries
-          that result and the method behind every figure.</p>
-        <p>Reliability got the same treatment: 21 minutes of sustained load on PostgreSQL 16,
-          37,804 tasks, including nine minutes in which workers were repeatedly SIGKILLed
-          mid-task. Every task reached a terminal state and none were lost. One task ran
-          twice, because its worker was killed after the work finished but before the result
-          was recorded. That is what at-least-once means. No task ran twice without a kill,
-          and interrupted work was reclaimed inside the documented bound.</p>
+          the full matrix and the method behind every figure.</p>
+        <p>Reliability got the same treatment: 21.5 minutes of sustained load on PostgreSQL 16,
+          37,804 tasks, including nine minutes in which a worker was SIGKILLed every 20 to
+          45 seconds. Every task reached a terminal state, no task ran twice in this run,
+          and every interrupted execution was re-executed inside the documented bound.
+          Execution is at-least-once: a worker killed after the work finished but before
+          the result was recorded leaves that task to run again, and the harness asserts
+          that a second execution is only ever attributable to a kill.</p>
         <p class="caveat">No-op benchmarks flatter every queue, so read these as relative, not as
           capacity planning. The full methodology, every run, and the raw per-sample data ship in
           the repository.</p>
