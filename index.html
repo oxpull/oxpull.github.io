@@ -111,10 +111,12 @@
               <li>Batches: group tasks, with a callback when every member is settled</li>
               <li>Unique tasks (deduplication)</li>
               <li>Rate limiting</li>
+              <li>Workflows: a set of tasks with dependencies, where a node
+                runs only after every node it depends on has succeeded</li>
               <li>Email support from the maintainer</li>
               <li>Requires Django 6.0 or later</li>
             </ul>
-            <p class="note">All three are built and tested. Pro is not on sale yet, and the waitlist
+            <p class="note">All four are built and tested. Pro is not on sale yet, and the waitlist
               below is how to hear when it opens. Delivered from a private
               package index using credentials issued per company, with no license key and no runtime check
               to break your production. Install stays <code>pip install</code>.</p>
@@ -168,8 +170,9 @@
 
         <h3>Do I need Pro to run production?</h3>
         <p>No. Durability, retries, the reaper, and graceful shutdown are all in the free
-          worker, and so are the stats API and the health command. Pro adds three
-          things the free tier does not do: batches, deduplication and rate limiting.
+          worker, and so are the stats API and the health command. Pro adds four
+          things the free tier does not do: batches, deduplication, rate
+          limiting and workflows.
           Support comes with it. Pro needs Django 6.0 or later. The free worker also
           runs on Django 5.2 LTS through the <code>django-tasks</code> backport, and
           Pro does not.</p>
