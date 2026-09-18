@@ -41,10 +41,11 @@
           development only. <strong><span data-brand>Oxpull</span></strong> stores the queue in the
           database you already run and executes tasks with a separate worker process. No broker,
           no Redis, nothing new to operate.</p>
-        <p class="hero-sub"><code>enqueue()</code> is a plain INSERT on your
-          default connection, so a task enqueued inside <code>transaction.atomic()</code> commits
-          or rolls back together with your business data. A broker cannot share your database
-          transaction. There is no window where an order exists without its email task, and no
+        <p class="hero-sub"><code>enqueue()</code> is a plain INSERT on the database your
+          router sends task rows to, which for most projects is the default one. Open
+          <code>transaction.atomic()</code> on that database and the task commits or rolls back
+          together with your business data. A broker cannot share your database transaction.
+          There is no window where an order exists without its email task, and no
           <code>on_commit</code> boilerplate.</p>
 
         <figure class="txn">
