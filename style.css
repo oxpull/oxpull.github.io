@@ -1,4 +1,4 @@
-/* Oxpull Pro waitlist page. System fonts only, no external requests. */
+/* Oxpull Pro page. System fonts only, no external requests. */
 
 :root {
   --paper: #f3f6f2;
@@ -297,21 +297,21 @@ h2 {
 }
 
 .signup form {
-  display: flex;
-  gap: 0.7rem;
-  flex-wrap: wrap;
+  display: grid;
+  gap: 0.9rem;
 }
 
 .signup label {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
+  display: block;
+  font-size: 0.86rem;
+  color: var(--muted);
+  margin-bottom: 0.3rem;
 }
 
-.signup input[type="email"] {
-  flex: 1 1 14rem;
+.signup input,
+.signup textarea {
+  display: block;
+  width: 100%;
   font: inherit;
   padding: 0.6rem 0.85rem;
   border: 1px solid var(--line);
@@ -320,7 +320,13 @@ h2 {
   color: var(--ink);
 }
 
-.signup input[type="email"]::placeholder {
+.signup textarea {
+  min-height: 6rem;
+  resize: vertical;
+}
+
+.signup input::placeholder,
+.signup textarea::placeholder {
   color: var(--muted);
 }
 
@@ -333,6 +339,7 @@ h2 {
   background: var(--accent);
   color: var(--accent-contrast);
   cursor: pointer;
+  justify-self: start;
 }
 
 .signup button:hover {

@@ -9,7 +9,7 @@ const SITE = {
   /* Open source package name, as installed with pip. */
   PACKAGE: "django-ox",
 
-  /* Where the waitlist form posts. */
+  /* Where the order form posts. */
   FORM_ENDPOINT: "https://formspree.io/f/mvkpbwwn",
 };
 
@@ -29,7 +29,7 @@ const SITE = {
   }
 
   function wireForm() {
-    var form = document.getElementById("waitlist-form");
+    var form = document.getElementById("order-form");
     if (!form) return;
     var button = form.querySelector("button[type=submit]");
     var errorBox = document.getElementById("form-error");
@@ -49,7 +49,7 @@ const SITE = {
       }
 
       button.disabled = true;
-      button.textContent = "Joining…";
+      button.textContent = "Sending…";
 
       fetch(SITE.FORM_ENDPOINT, {
         method: "POST",
@@ -65,7 +65,7 @@ const SITE = {
         })
         .catch(function () {
           button.disabled = false;
-          button.textContent = "Join the waitlist";
+          button.textContent = "Order Pro";
           errorBox.hidden = false;
         });
     });

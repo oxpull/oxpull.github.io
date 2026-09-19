@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Oxpull Pro waitlist. The production worker for Django Tasks</title>
-  <meta name="description" content="A database-backed worker for Django's Tasks framework. Transactional enqueue, no broker. Join the waitlist for the Pro tier.">
+  <title>Oxpull Pro. The production worker for Django Tasks</title>
+  <meta name="description" content="A database-backed worker for Django's Tasks framework. Transactional enqueue, no broker. Pro is $399 per year, per company.">
   <link rel="canonical" href="https://oxpull.com/">
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Oxpull">
   <meta property="og:title" content="The production worker for Django Tasks">
-  <meta property="og:description" content="A database-backed worker for Django's Tasks framework. Transactional enqueue, no broker. Join the waitlist for the Pro tier.">
+  <meta property="og:description" content="A database-backed worker for Django's Tasks framework. Transactional enqueue, no broker. Pro is $399 per year, per company.">
   <meta property="og:url" content="https://oxpull.com/">
   <meta property="og:image" content="https://oxpull.com/assets/social-card.png">
   <meta property="og:image:width" content="1200">
@@ -18,7 +18,7 @@
   <meta property="og:image:alt" content="django-ox: the production worker for Django Tasks. Your database is the queue.">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="The production worker for Django Tasks">
-  <meta name="twitter:description" content="A database-backed worker for Django's Tasks framework. Transactional enqueue, no broker. Join the waitlist for the Pro tier.">
+  <meta name="twitter:description" content="A database-backed worker for Django's Tasks framework. Transactional enqueue, no broker. Pro is $399 per year, per company.">
   <meta name="twitter:image" content="https://oxpull.com/assets/social-card.png">
 
   <link rel="stylesheet" href="style.css">
@@ -30,7 +30,7 @@
 
     <header class="top">
       <div class="wordmark"><span data-brand>Oxpull</span><span class="pro">Pro</span></div>
-      <div class="top-note">waitlist</div>
+      <div class="top-note">$399 per year</div>
     </header>
 
     <main>
@@ -117,30 +117,52 @@
               <li>Email support from the maintainer</li>
               <li>Requires Django 6.0 or later</li>
             </ul>
-            <p class="note">All four are built and tested. Pro is not on sale yet, and the waitlist
-              below is how to hear when it opens. Delivered from a private
-              package index using credentials issued per company, with no license key and no runtime check
-              to break your production. Install stays <code>pip install</code>.</p>
+            <p class="note">Delivered from a private package index using credentials issued per
+              company, with no license key and no runtime check to break your production. Install
+              stays <code>pip install</code>. <a href="#order">Order below</a>.</p>
           </div>
         </div>
       </section>
 
-      <section id="waitlist">
-        <h2>Pricing, and the waitlist</h2>
-        <p class="price-line">Pro is planned at <strong>$399 per year, per company</strong>, flat,
-          self-serve. Seven-day money-back, no trial keys.</p>
+      <section id="order">
+        <h2>Pricing and ordering</h2>
+        <p class="price-line"><strong>$399 per year, per company</strong>, excluding VAT where it applies.
+          Seven-day money-back, no trial keys.</p>
+        <p class="price-line">Fill in the form and the invoice goes out within one business day.
+          When it's paid, the credentials for the private package index arrive by email, and
+          install is <code>pip install</code>.</p>
 
         <div class="signup">
-          <form id="waitlist-form" method="post">
-            <label for="email">Email address</label>
-            <input type="email" id="email" name="email" required autocomplete="email"
-              placeholder="you@company.com">
-            <button type="submit">Join the waitlist</button>
+          <form id="order-form" method="post">
+            <div class="field">
+              <label for="company">Company</label>
+              <input type="text" id="company" name="company" required autocomplete="organization">
+            </div>
+            <div class="field">
+              <label for="contact-name">Contact name</label>
+              <input type="text" id="contact-name" name="contact_name" required autocomplete="name">
+            </div>
+            <div class="field">
+              <label for="email">Email address</label>
+              <input type="email" id="email" name="email" required autocomplete="email"
+                placeholder="you@company.com">
+            </div>
+            <div class="field">
+              <label for="billing-address">Billing address</label>
+              <textarea id="billing-address" name="billing_address" required rows="4"
+                autocomplete="street-address"></textarea>
+            </div>
+            <div class="field">
+              <label for="vat-id">VAT ID (optional, for the invoice)</label>
+              <input type="text" id="vat-id" name="vat_id">
+            </div>
+            <button type="submit">Order Pro</button>
           </form>
-          <p id="form-error" hidden>That didn't go through. Check the address and try again.</p>
-          <p class="privacy">Your email is used only to tell you when Pro launches. Reply
-            "remove", or write to <a href="mailto:support@oxpull.com">support@oxpull.com</a>,
-            and it is deleted.</p>
+          <p id="form-error" hidden>That didn't go through. Try again, or write to
+            <a href="mailto:support@oxpull.com">support@oxpull.com</a>.</p>
+          <p class="privacy">These details are used to issue the invoice and the credential,
+            nothing else. Write to <a href="mailto:support@oxpull.com">support@oxpull.com</a>
+            to have them removed.</p>
         </div>
       </section>
 
@@ -153,10 +175,12 @@
           tier is not a demo. It is the backend the docs mean when they say production systems
           need a durable queue and a worker process.</p>
 
-        <h3>When does this ship?</h3>
-        <p>The open source worker is live: <code>pip install django-ox</code>, with
-          <a href="https://oxpull.com/django-ox/">documentation here</a>. Pro is built and
-          tested. What is left is the purchase path. Waitlist email is the announcement channel.</p>
+        <h3>How do I buy it?</h3>
+        <p>Through the <a href="#order">order form</a> above. Every order is invoiced, and the
+          invoice says how to pay. If procurement needs a PO number on the invoice, or a signed
+          order form, write to <a href="mailto:support@oxpull.com">support@oxpull.com</a>. The
+          open source worker needs no order: <code>pip install django-ox</code>, with
+          <a href="https://oxpull.com/django-ox/">documentation here</a>.</p>
 
         <h3>Who is behind it?</h3>
         <p>An independent software vendor with one product: this one. You will know who
@@ -165,9 +189,7 @@
 
         <h3>What does support look like?</h3>
         <p>Open source support is on GitHub issues. Pro comes with email support from
-          the maintainer at <a href="mailto:support@oxpull.com">support@oxpull.com</a>. If your
-          procurement needs a PO and an invoice instead of a card, write to that address.
-          Invoiced purchasing is planned alongside self-serve.</p>
+          the maintainer at <a href="mailto:support@oxpull.com">support@oxpull.com</a>.</p>
 
         <h3>Do I need Pro to run production?</h3>
         <p>No. Durability, retries, the reaper, and graceful shutdown are all in the free
