@@ -57,26 +57,67 @@
         </figure>
       </section>
 
+      <!--
+        DRAFT OPTIONS for Philip, not rendered; delete this comment before deploy.
+
+        The section below is OPTION A: method facts and links, no figures. Publication is
+        decided cell by cell. If a cell is kept, its sentence goes in as a second paragraph
+        of the section, after the method paragraph. Source: django-ox 1.3.0 against
+        django-tasks-db 0.13.0 on 2026-09-19, raw files results-raw-2026-09-19.json and
+        results-kill-2026-09-19.json in the benchmarks directory of the repository.
+
+        [OPTION B] OPTION A plus the drain sentence:
+
+          <p>In today's run <span data-package>django-ox</span> drained 2,000 and 20,000
+            queued tasks 10-18% faster than django-tasks-db with matched worker
+            processes.</p>
+
+          Caption for the row it comes from (from the harness README; reconcile with the
+          benchmarks page draft before deploy): N = 2,000 or 20,000 no-op tasks preloaded
+          as READY before the clock, ANALYZE after the preload; the clock starts before the
+          worker processes spawn and stops on the poll that sees N SUCCESSFUL rows; one
+          worker process per backend (1v1) or four per backend (4v4); median of five runs;
+          faster means tasks per second.
+
+          Checked against the raw file: median gain 14.1% (2,000, 1v1), 10.1% (2,000, 4v4),
+          18.3% (20,000, 1v1), 15.0% (20,000, 4v4). No run of one backend overlaps any run
+          of the other in any cell. Read as time saved instead of rate gained the range is
+          9-16%. "In today's run" must become the date before deploy.
+
+        [OPTION C] OPTION A plus the kill-test sentence:
+
+          <p>After 20 worker kills per trial, <span data-package>django-ox</span> finished
+            2,000 of 2,000 tasks in every trial; django-tasks-db left 13-19 tasks stuck
+            RUNNING per trial.</p>
+
+          Caption for the row it comes from (from the harness README; reconcile with the
+          benchmarks page draft before deploy): N = 2,000 tasks enqueued as due per trial,
+          one worker process per backend, SIGKILL 20 times per trial at gaps of 3 to 10 s
+          drawn once per trial and shared by both backends, a replacement worker started
+          after each kill, no supervisor; observed until 30 s pass with no status change,
+          then 120 s more; django-ox LOCK_TIMEOUT 15 s (the default is 300 s), reap interval
+          7.5 s, reclaim bound 23.5 s; five trials per backend.
+
+          Checked against the raw file: django-ox SUCCESSFUL 2,000 of 2,000 in trials 1 to 5,
+          rows never terminal 0; django-tasks-db rows RUNNING at the end 19, 16, 13, 15, 18.
+          In the same file and not in the sentence: django-ox repeated a task's effect
+          1, 1, 1, 2, 2 times per trial (a kill between the effect and the outcome write,
+          the at-least-once gap), and its longest reclaim was 22.5 s against the 23.5 s bound.
+      -->
       <section class="bench">
         <h2>Measured, not promised</h2>
-        <p>Against django-tasks-db 0.12 on PostgreSQL 16 (2,000 no-op tasks, five runs per
-          arm, one machine), <span data-package>django-ox</span> 1.1.0 completed the batch at 124.5
-          tasks per second against 108.0 with a single worker. Every one of our five runs
-          beat every one of theirs: our slowest was 121.3, their fastest 110.1.
-          In-transaction enqueue latency was a tie, about six tenths of a millisecond at
-          p50 for both. The
+        <p><span data-package>django-ox</span> is benchmarked against django-tasks-db, the
+          other database backend for Django's Tasks API. Both run on the core Tasks API,
+          against the same PostgreSQL database, on the same machine. Every cell is five
+          runs, and every run behind a published figure is on the page, not a best pick.
+          A worker-death test kills a worker process 20 times per trial and counts what
+          each backend does with the tasks it was running. The
           <a href="https://oxpull.com/django-ox/benchmarks/">benchmarks page</a> carries
-          the full matrix and the method behind every figure.</p>
-        <p>Reliability got the same treatment: 21.5 minutes of sustained load on PostgreSQL 16,
-          37,804 tasks, including nine minutes in which a worker was SIGKILLed every 20 to
-          45 seconds. Every task reached a terminal state, no task ran twice in this run,
-          and every interrupted execution was re-executed inside the documented bound.
-          Execution is at-least-once. A worker killed after the work finished but before
-          the result was recorded leaves that task to run again. The harness asserts
-          that a second execution is only ever attributable to a kill.</p>
-        <p class="caveat">No-op benchmarks flatter every queue, so read these as relative, not as
-          capacity planning. The full methodology, every run, and the raw per-sample data ship in
-          the repository.</p>
+          the method, the figures and the raw files.</p>
+        <p class="caveat">The benchmark task bodies do nothing, so the rates measure
+          framework overhead. Read them as relative, not as capacity planning. The
+          <a href="https://oxpull.com/django-ox/stability/">API stability page</a> states
+          what counts as public API and how versions change.</p>
       </section>
 
       <section>
