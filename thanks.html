@@ -3,33 +3,216 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Order received. Oxpull Pro</title>
   <meta name="robots" content="noindex">
-  <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="assets/favicon.png">
-  <link rel="apple-touch-icon" href="assets/favicon.png">
+  <title>Order received. Oxpull Pro</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0d1410;
+      --panel: #16201b;
+      --panel-deep: #101813;
+      --ink: #eef4ee;
+      --muted: #a4b4a8;
+      --subtle: #8ca093;
+      --accent: #6fc59a;
+      --accent-hover: #8fd8b3;
+      --accent-ink: #0c2417;
+      --accent-soft: rgba(111, 197, 154, .09);
+      --accent-line: rgba(111, 197, 154, .3);
+      --line: #2a382e;
+      --line-soft: rgba(168, 196, 176, .1);
+      --grid: rgba(168, 196, 176, .055);
+      --glow: rgba(74, 144, 98, .13);
+      --nav-bg: rgba(13, 20, 16, .91);
+      --shadow: 0 24px 80px rgba(0, 0, 0, .22);
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      --radius: 16px;
+      --max-width: 1160px;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        color-scheme: light;
+        --bg: #f3f6f2;
+        --panel: #ffffff;
+        --panel-deep: #f6f8f4;
+        --ink: #1b2420;
+        --muted: #526359;
+        --subtle: #617166;
+        --accent: #1f6b4b;
+        --accent-hover: #155339;
+        --accent-ink: #ffffff;
+        --accent-soft: rgba(31, 107, 75, .065);
+        --accent-line: rgba(31, 107, 75, .28);
+        --line: #d7e0d6;
+        --line-soft: rgba(35, 72, 47, .09);
+        --grid: rgba(35, 72, 47, .06);
+        --glow: rgba(90, 161, 111, .13);
+        --nav-bg: rgba(243, 246, 242, .92);
+        --shadow: 0 24px 70px rgba(35, 61, 41, .075);
+      }
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+      color: var(--ink);
+      font: 16px/1.6 var(--font);
+      -webkit-font-smoothing: antialiased;
+    }
+    ::selection { color: var(--accent-ink); background: var(--accent); }
+    a { color: inherit; text-decoration: none; }
+    :focus-visible { outline: 3px solid var(--accent); outline-offset: 5px; }
+    h1, p { margin: 0; }
+    svg { display: block; flex: none; }
+    .svg-library { position: absolute; width: 0; height: 0; overflow: hidden; }
+    .container { width: min(var(--max-width), calc(100% - 64px)); margin-inline: auto; }
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid var(--line-soft);
+      background: var(--nav-bg);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+    .nav { min-height: 76px; display: flex; align-items: center; }
+    .wordmark {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 23px;
+      font-weight: 720;
+      letter-spacing: -.055em;
+    }
+    .brand-icon { width: 32px; height: 32px; color: var(--accent); }
+    main {
+      flex: 1;
+      padding-block: clamp(48px, 9vw, 104px);
+      background:
+        radial-gradient(ellipse at 75% 0, var(--glow), transparent 65%),
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: auto, 56px 56px, 56px 56px;
+    }
+    .thanks {
+      max-width: 680px;
+      margin-inline: auto;
+      padding: clamp(24px, 5vw, 48px);
+      border: 1px solid var(--accent-line);
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, var(--accent-soft), transparent 65%), var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .check {
+      width: 44px;
+      height: 44px;
+      margin-bottom: 25px;
+      padding: 11px;
+      border: 1px solid var(--accent-line);
+      border-radius: 10px;
+      color: var(--accent);
+      background: var(--accent-soft);
+    }
+    h1 {
+      font-size: clamp(2.7rem, 6vw, 4rem);
+      font-weight: 620;
+      letter-spacing: -.064em;
+      line-height: 1.025;
+      text-wrap: balance;
+    }
+    .thanks p { margin-top: 25px; color: var(--muted); }
+    code {
+      padding: .1em .35em;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: var(--panel-deep);
+      color: var(--ink);
+      font: .88em var(--mono);
+      overflow-wrap: anywhere;
+    }
+    .thanks p a { color: var(--accent); text-decoration: underline; text-underline-offset: 4px; }
+    .thanks p a:hover { color: var(--accent-hover); }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      margin-top: 30px;
+      padding: 11px 19px;
+      border: 1px solid var(--accent);
+      border-radius: 7px;
+      background: var(--accent);
+      color: var(--accent-ink);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.4;
+      box-shadow: 0 2px 0 rgba(0, 0, 0, .08);
+    }
+    .button:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+    .site-footer { padding: 37px 0 28px; border-top: 1px solid var(--line); background: var(--panel-deep); }
+    .site-footer .wordmark { font-size: 21px; }
+    .site-footer .brand-icon { width: 28px; height: 28px; }
+    .footer-bottom {
+      margin-top: 27px;
+      padding-top: 27px;
+      border-top: 1px solid var(--line);
+      color: var(--subtle);
+      font: 10px/1.7 var(--mono);
+    }
+    @media (max-width: 600px) {
+      .container { width: calc(100% - 40px); }
+      .nav { min-height: 66px; }
+      .wordmark { font-size: 22px; gap: 8px; }
+      .brand-icon { width: 29px; height: 29px; }
+    }
+  </style>
 </head>
 <body>
-  <div class="wrap">
+  <svg class="svg-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="brand" viewBox="0 0 32 32">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10 11C5 11 3 8 3 4M22 11c5 0 7-3 7-7M9 11l2 13 5 4 5-4 2-13-7-4z"/>
+        <path d="M12 16h1m6 0h1m-7 6h6"/>
+      </g>
+    </symbol>
+  </svg>
 
-    <header class="top">
-      <div class="wordmark"><span data-brand>Oxpull</span><span class="pro">Pro</span></div>
-      <div class="top-note">$399 per year</div>
-    </header>
+  <header class="site-header">
+    <nav class="nav container" aria-label="Main">
+      <a class="wordmark" href="./">
+        <svg class="brand-icon" aria-hidden="true"><use href="#brand"/></svg>
+        oxpull
+      </a>
+    </nav>
+  </header>
 
-    <main class="thanks">
-      <h1>Order received</h1>
-      <p>The invoice goes out within two business days. When it's paid, the credentials for the
-        private package index arrive by email, and install is <code>pip install</code>.
-        Questions to <a href="mailto:support@oxpull.com">support@oxpull.com</a>.</p>
-      <p><a href="index.html">Back to the page</a></p>
-    </main>
+  <main>
+    <div class="container">
+      <section class="thanks" aria-labelledby="heading">
+        <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m5 12 4 4L19 6"/>
+        </svg>
+        <h1 id="heading">Order received</h1>
+        <p>The invoice goes out within two business days. When it's paid, the credentials for the private package index arrive by email, and install is <code>pip install</code>.</p>
+        <p>Questions to <a href="mailto:support@oxpull.com">support@oxpull.com</a>.</p>
+        <a class="button" href="./">Back to the page</a>
+      </section>
+    </div>
+  </main>
 
-    <footer>
-      <p>No analytics, no trackers, no cookies on this page.</p>
-    </footer>
-
-  </div>
-  <script src="config.js"></script>
+  <footer class="site-footer">
+    <div class="container">
+      <a class="wordmark" href="./">
+        <svg class="brand-icon" aria-hidden="true"><use href="#brand"/></svg>
+        oxpull
+      </a>
+      <p class="footer-bottom">No analytics, no trackers, no cookies on this page.</p>
+    </div>
+  </footer>
 </body>
 </html>
