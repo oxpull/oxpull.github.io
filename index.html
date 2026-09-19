@@ -1,293 +1,1212 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Oxpull Pro. Django Tasks on your database</title>
-  <meta name="description" content="Django Tasks on your database. Retries, recovery and schedules included. No broker. Oxpull Pro is $399 per year, per company.">
-  <link rel="canonical" href="https://oxpull.com/">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#0d1410" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f3f6f2" media="(prefers-color-scheme: light)">
+  <meta name="description" content="Django tasks in your database. Run a worker without a separate broker. Retries and recovery are included.">
+  <title>Oxpull · Django tasks in your database</title>
 
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Oxpull">
-  <meta property="og:title" content="Django Tasks on your database">
-  <meta property="og:description" content="Django Tasks on your database. Retries, recovery and schedules included. No broker. Oxpull Pro is $399 per year, per company.">
-  <meta property="og:url" content="https://oxpull.com/">
-  <meta property="og:image" content="https://oxpull.com/assets/social-card.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="django-ox: the production worker for Django Tasks. Your database is the queue.">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Django Tasks on your database">
-  <meta name="twitter:description" content="Django Tasks on your database. Retries, recovery and schedules included. No broker. Oxpull Pro is $399 per year, per company.">
-  <meta name="twitter:image" content="https://oxpull.com/assets/social-card.png">
+  <style>
+    /* ===== Tokens and foundation ===== */
+    :root {
+      color-scheme: dark;
+      --bg: #0d1410;
+      --panel: #16201b;
+      --panel-raised: #1b2820;
+      --panel-deep: #101813;
+      --ink: #eef4ee;
+      --muted: #a4b4a8;
+      --subtle: #8ca093;
+      --accent: #6fc59a;
+      --accent-hover: #8fd8b3;
+      --accent-ink: #0c2417;
+      --accent-soft: rgba(111, 197, 154, .09);
+      --accent-line: rgba(111, 197, 154, .3);
+      --warm: #e5bc85;
+      --code-purple: #c4ace0;
+      --code-blue: #a0c5d6;
+      --line: #2a382e;
+      --line-soft: rgba(168, 196, 176, .1);
+      --grid: rgba(168, 196, 176, .055);
+      --glow: rgba(74, 144, 98, .13);
+      --nav-bg: rgba(13, 20, 16, .91);
+      --shadow: 0 24px 80px rgba(0, 0, 0, .22);
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      --radius: 16px;
+      --max-width: 1160px;
+    }
 
-  <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="assets/favicon.png">
-  <link rel="apple-touch-icon" href="assets/favicon.png">
+    @media (prefers-color-scheme: light) {
+      :root {
+        color-scheme: light;
+        --bg: #f3f6f2;
+        --panel: #ffffff;
+        --panel-raised: #edf3ed;
+        --panel-deep: #f6f8f4;
+        --ink: #1b2420;
+        --muted: #526359;
+        --subtle: #617166;
+        --accent: #1f6b4b;
+        --accent-hover: #155339;
+        --accent-ink: #ffffff;
+        --accent-soft: rgba(31, 107, 75, .065);
+        --accent-line: rgba(31, 107, 75, .28);
+        --warm: #865a24;
+        --code-purple: #78509c;
+        --code-blue: #29647d;
+        --line: #d7e0d6;
+        --line-soft: rgba(35, 72, 47, .09);
+        --grid: rgba(35, 72, 47, .06);
+        --glow: rgba(90, 161, 111, .13);
+        --nav-bg: rgba(243, 246, 242, .92);
+        --shadow: 0 24px 70px rgba(35, 61, 41, .075);
+      }
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 100px; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    ::selection { color: var(--accent-ink); background: var(--accent); }
+    a { color: inherit; text-decoration: none; }
+    button, input, textarea { font: inherit; }
+    button, a, input, textarea, summary { -webkit-tap-highlight-color: transparent; }
+    button { cursor: pointer; }
+    a, button, summary {
+      transition: color .18s ease, background .18s ease, border-color .18s ease, transform .18s ease;
+    }
+    :focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 5px;
+    }
+    h1, h2, h3, p { margin: 0; }
+    h1, h2, h3 { text-wrap: balance; }
+    h2 {
+      font-size: clamp(2rem, 3.8vw, 3.25rem);
+      line-height: 1.12;
+      font-weight: 620;
+      letter-spacing: -.045em;
+    }
+    h3 { font-weight: 600; letter-spacing: -.025em; line-height: 1.3; }
+    img, svg { display: block; }
+    code, pre { font-family: var(--mono); }
+    code { font-size: .88em; }
+    p code {
+      padding: .1em .35em;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: var(--panel-deep);
+      color: var(--ink);
+      overflow-wrap: anywhere;
+    }
+    .container { width: min(var(--max-width), calc(100% - 64px)); margin-inline: auto; }
+    .icon { width: 18px; height: 18px; flex: 0 0 auto; }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .svg-library { position: absolute; width: 0; height: 0; overflow: hidden; }
+    .skip-link {
+      position: fixed;
+      top: 12px;
+      left: 16px;
+      z-index: 100;
+      padding: 10px 16px;
+      color: var(--accent-ink);
+      background: var(--accent);
+      border-radius: 6px;
+      transform: translateY(-160%);
+    }
+    .skip-link:focus { transform: translateY(0); }
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      color: var(--accent);
+      font: 11px/1.5 var(--mono);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before { content: ""; width: 20px; height: 1px; background: currentColor; }
+    .section { padding-block: 104px; }
+    .section-heading {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 40px;
+      margin-bottom: 44px;
+    }
+    .section-heading > p { max-width: 320px; color: var(--muted); font-size: 15px; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      min-height: 46px;
+      padding: 11px 19px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.4;
+      white-space: nowrap;
+    }
+    .button-primary {
+      color: var(--accent-ink);
+      background: var(--accent);
+      border-color: var(--accent);
+      box-shadow: 0 2px 0 rgba(0, 0, 0, .08);
+    }
+    .button-primary:hover {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+    .button-secondary { color: var(--ink); background: var(--panel); }
+    .button-secondary:hover { background: var(--panel-raised); border-color: var(--subtle); }
+    .text-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 550;
+    }
+    .text-link:hover { text-decoration: underline; text-underline-offset: 4px; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 4px 9px;
+      border: 1px solid var(--accent-line);
+      border-radius: 5px;
+      color: var(--accent);
+      background: var(--accent-soft);
+      font: 10px/1.5 var(--mono);
+      white-space: nowrap;
+    }
+    .dot { width: 5px; height: 5px; flex: 0 0 auto; border-radius: 50%; background: currentColor; }
+
+    /* ===== Sticky navigation ===== */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      border-bottom: 1px solid var(--line-soft);
+      background: var(--nav-bg);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+    .nav { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 32px; }
+    .wordmark { display: inline-flex; align-items: center; gap: 10px; font-size: 23px; font-weight: 720; letter-spacing: -.055em; }
+    .brand-icon { width: 32px; height: 32px; color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 30px; margin-left: auto; }
+    .nav-links > a { color: var(--muted); font-size: 13px; padding-block: 12px; }
+    .nav-links > a:hover { color: var(--ink); }
+    .nav-cta { min-height: 37px; padding: 8px 13px; font-size: 12px; }
+
+    /* ===== Hero and code illustration ===== */
+    .hero { position: relative; padding: 94px 0 78px; isolation: isolate; overflow: hidden; }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: linear-gradient(to bottom, #000, transparent 90%);
+      -webkit-mask-image: linear-gradient(to bottom, #000, transparent 90%);
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      width: 900px;
+      height: 700px;
+      right: -160px;
+      top: -160px;
+      background: radial-gradient(ellipse, var(--glow), transparent 66%);
+      pointer-events: none;
+    }
+    .hero-grid { display: grid; grid-template-columns: 1.02fr 1fr; gap: 48px; align-items: center; }
+    .release {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 5px 10px 5px 6px;
+      margin-bottom: 30px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--panel-deep);
+      color: var(--muted);
+      font: 10px/1.5 var(--mono);
+    }
+    .release-version { color: var(--accent); background: var(--accent-soft); padding: 2px 6px; border-radius: 3px; }
+    .release .icon { width: 12px; height: 12px; }
+    h1 { max-width: 580px; font-size: clamp(3.5rem, 6.1vw, 5.35rem); font-weight: 620; letter-spacing: -.064em; line-height: 1.025; }
+    h1 span { color: var(--accent); }
+    .hero-description { max-width: 415px; margin-top: 25px; color: var(--muted); font-size: 18px; line-height: 1.65; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+    .hero-footnote { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 24px; color: var(--subtle); font: 11px/1.6 var(--mono); }
+    .hero-footnote .separator { width: 3px; height: 3px; background: var(--subtle); border-radius: 50%; }
+    .code-stage { min-width: 0; padding-top: 30px; }
+    .code-card { overflow: hidden; border: 1px solid var(--accent-line); border-radius: 12px; background: var(--panel-deep); box-shadow: var(--shadow); }
+    .code-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 51px; padding: 0 18px; border-bottom: 1px solid var(--line); background: var(--panel); }
+    .file-label { display: flex; align-items: center; gap: 9px; color: var(--muted); font: 11px/1.4 var(--mono); }
+    .file-label .icon { width: 14px; height: 14px; color: var(--accent); }
+    .file-type { color: var(--subtle); font: 10px/1.4 var(--mono); }
+    .code-card pre { margin: 0; padding: 26px 19px 27px; overflow-x: auto; font-size: 12px; line-height: 2; tab-size: 4; }
+    .code-card pre code { font-size: inherit; }
+    .syntax-keyword { color: var(--code-purple); }
+    .syntax-function { color: var(--code-blue); }
+    .syntax-type { color: var(--warm); }
+    .syntax-comment { color: var(--subtle); }
+    .transaction-preview { padding: 19px; border-top: 1px solid var(--line); background: var(--panel); }
+    .preview-heading { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 17px; }
+    .preview-label { color: var(--subtle); font: 10px/1.5 var(--mono); letter-spacing: .045em; text-transform: uppercase; }
+    .db-rows { position: relative; display: grid; gap: 8px; margin-left: 7px; padding-left: 17px; border-left: 1px solid var(--accent); }
+    .db-rows::before, .db-rows::after { content: ""; position: absolute; left: 0; width: 7px; height: 1px; background: var(--accent); }
+    .db-rows::before { top: 0; }
+    .db-rows::after { bottom: 0; }
+    .db-row { display: flex; align-items: center; gap: 9px; padding: 11px 12px; border: 1px solid var(--line); border-radius: 5px; background: var(--panel-deep); font: 11px/1.5 var(--mono); }
+    .db-row .icon { width: 14px; height: 14px; color: var(--subtle); }
+    .db-row .row-data { margin-left: auto; color: var(--subtle); font-size: 10px; }
+    .row-check { color: var(--accent); display: flex; }
+    .db-row .row-check .icon { color: var(--accent); }
+    .transaction-caption { margin: 13px 0 0 24px; color: var(--muted); font: 10px/1.6 var(--mono); }
+    .code-caption { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 17px; color: var(--subtle); font: 10px/1.5 var(--mono); }
+    .code-caption .icon { width: 13px; height: 13px; color: var(--accent); }
+
+    /* ===== Proof strip ===== */
+    .proof { padding-bottom: 36px; }
+    .proof-topline { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-bottom: 20px; }
+    .proof-topline .eyebrow { margin: 0; color: var(--subtle); font-size: 10px; }
+    .proof-grid { display: grid; grid-template-columns: 1.1fr 1fr .9fr; padding: 31px 0; border-block: 1px solid var(--line); }
+    .metric { padding: 0 30px; }
+    .metric:first-child { padding-left: 0; }
+    .metric + .metric { border-left: 1px solid var(--line); }
+    .metric-number { color: var(--ink); font-size: clamp(1.8rem, 3vw, 2.65rem); font-weight: 570; line-height: 1.2; letter-spacing: -.05em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .metric-number small { font-size: .47em; font-weight: 400; letter-spacing: -.015em; color: var(--muted); }
+    .metric-number .highlight { color: var(--accent); }
+    .metric-label { max-width: 280px; margin-top: 10px; color: var(--muted); font-size: 12px; line-height: 1.7; }
+    .method-note { margin-top: 15px; color: var(--subtle); font: 10px/1.8 var(--mono); max-width: 880px; }
+
+    /* ===== Three value blocks ===== */
+    .features { border-bottom: 1px solid var(--line-soft); }
+    .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .feature-card { min-width: 0; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+    .feature-visual {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 190px;
+      padding: 25px;
+      border-bottom: 1px solid var(--line);
+      background: radial-gradient(ellipse at 50% 70%, var(--accent-soft), transparent 75%), var(--panel-deep);
+    }
+    .visual-label { position: absolute; top: 15px; left: 19px; color: var(--subtle); font: 9px/1.5 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+    .feature-body { padding: 25px 24px 28px; }
+    .feature-index { margin-bottom: 12px; color: var(--accent); font: 10px/1.5 var(--mono); }
+    .feature-body h3 { font-size: 20px; margin-bottom: 14px; }
+    .feature-body p { color: var(--muted); font-size: 13px; line-height: 1.85; }
+    .architecture { display: flex; align-items: center; justify-content: center; width: 100%; padding-top: 15px; }
+    .architecture-node { display: flex; align-items: center; flex-direction: column; gap: 9px; min-width: 92px; color: var(--muted); font: 10px/1.4 var(--mono); }
+    .node-icon { display: grid; place-items: center; width: 57px; height: 57px; border: 1px solid var(--accent-line); border-radius: 10px; background: var(--panel); color: var(--accent); box-shadow: 0 6px 20px rgba(0, 0, 0, .04); }
+    .node-icon .icon { width: 24px; height: 24px; }
+    .connection { position: relative; height: 1px; flex: 1; max-width: 75px; min-width: 25px; margin-bottom: 23px; background: var(--accent-line); }
+    .connection::after { position: absolute; content: ""; top: -3px; left: calc(50% - 3px); width: 7px; height: 7px; background: var(--accent); border: 2px solid var(--panel-deep); border-radius: 50%; }
+    .recovery { width: 100%; max-width: 260px; padding-top: 18px; }
+    .recovery-top { display: flex; align-items: center; gap: 13px; }
+    .queue-stack { display: flex; gap: 5px; padding: 10px; border: 1px solid var(--accent-line); border-radius: 7px; background: var(--panel); }
+    .task-tile { width: 15px; height: 23px; border: 1px solid var(--accent-line); border-radius: 3px; background: var(--accent-soft); }
+    .task-tile:first-child { background: var(--accent); }
+    .recovery-arrow { color: var(--subtle); flex: 1; }
+    .stopped-worker { padding: 12px 10px; border: 1px dashed var(--subtle); border-radius: 6px; color: var(--muted); font: 10px/1.6 var(--mono); white-space: nowrap; }
+    .stopped-worker span { color: var(--warm); }
+    .return-path { position: relative; height: 26px; margin: 6px 39px 0; border: 1px solid var(--accent-line); border-top: 0; border-radius: 0 0 8px 8px; }
+    .return-path::before { content: ""; position: absolute; top: -1px; left: -4px; width: 7px; height: 7px; border-top: 1px solid var(--accent); border-left: 1px solid var(--accent); transform: rotate(45deg); }
+    .return-label { width: max-content; margin: -8px auto 0; padding: 0 8px; position: relative; background: var(--panel-deep); color: var(--accent); font: 9px/1.5 var(--mono); }
+    .atomic-diagram { width: 100%; max-width: 255px; padding-top: 18px; }
+    .atomic-diagram .db-row { padding: 8px 10px; font-size: 10px; }
+    .atomic-diagram .db-row .row-data { color: var(--accent); font-size: 9px; }
+    .atomic-diagram .transaction-caption { text-align: center; color: var(--accent); font-size: 9px; margin-top: 10px; }
+
+    /* ===== Comparison and benchmark ===== */
+    .evidence { border-bottom: 1px solid var(--line-soft); }
+    .evidence-grid { display: grid; grid-template-columns: .95fr 1.05fr; gap: 22px; align-items: stretch; }
+    .data-panel { min-width: 0; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); overflow: hidden; }
+    .panel-heading { padding: 26px 26px 22px; }
+    .panel-heading h3 { font-size: 19px; }
+    .panel-heading p { margin-top: 7px; color: var(--subtle); font-size: 12px; }
+    .comparison-scroll { overflow-x: auto; }
+    .comparison { width: calc(100% - 36px); margin: 0 18px; border-collapse: collapse; font-size: 12px; }
+    .comparison th, .comparison td { padding: 19px 10px; border-bottom: 1px solid var(--line); text-align: center; }
+    .comparison thead th { padding-top: 15px; padding-bottom: 16px; color: var(--muted); font: 10px/1.6 var(--mono); vertical-align: bottom; }
+    .comparison th:first-child { text-align: left; padding-left: 8px; width: 45%; }
+    .comparison tbody th { font-weight: 450; color: var(--muted); line-height: 1.6; }
+    .comparison .our-column { background: var(--accent-soft); }
+    .comparison thead .our-column { border-top: 1px solid var(--accent-line); color: var(--accent); }
+    .comparison th .table-subtitle { display: block; font-size: 9px; margin-top: 2px; color: var(--subtle); }
+    .comparison .status { display: inline-flex; align-items: center; justify-content: center; width: 23px; height: 23px; }
+    .status.yes { border-radius: 50%; background: var(--accent-soft); color: var(--accent); }
+    .status.no { color: var(--subtle); }
+    .status .icon { width: 14px; height: 14px; }
+    .comparison tbody tr:last-child th, .comparison tbody tr:last-child td { border-bottom: none; }
+    .panel-note { margin: 0; padding: 19px 26px 23px; border-top: 1px solid var(--line); color: var(--subtle); font: 10px/1.7 var(--mono); }
+    .chart-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin: 0 26px 24px; color: var(--muted); font: 10px/1.5 var(--mono); }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-swatch { width: 8px; height: 8px; border-radius: 2px; background: var(--accent); }
+    .legend-swatch.baseline { background: var(--subtle); opacity: .65; }
+    .chart { padding: 0 26px 26px; }
+    .bar-group + .bar-group { margin-top: 21px; }
+    .bar-group-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 8px; color: var(--muted); font: 10px/1.5 var(--mono); }
+    .bar-group-heading strong { font-weight: 400; color: var(--ink); }
+    h4.bar-group-heading { margin-top: 0; }
+    .bar-pair { display: grid; gap: 6px; }
+    .bar-row { display: grid; grid-template-columns: 1fr 42px; align-items: center; gap: 11px; }
+    .bar-track { height: 10px; border-radius: 2px; background: var(--line-soft); }
+    .bar { height: 100%; border-radius: 2px; background: var(--accent); }
+    .bar.baseline { background: var(--subtle); opacity: .55; }
+    .bar-value { text-align: right; color: var(--accent); font: 10px/1 var(--mono); font-variant-numeric: tabular-nums; }
+    .bar-row.baseline .bar-value { color: var(--muted); }
+    .w-237 { width: 23.70%; }
+    .w-208 { width: 20.78%; }
+    .w-853 { width: 85.26%; }
+    .w-774 { width: 77.42%; }
+    .w-230 { width: 23.04%; }
+    .w-195 { width: 19.48%; }
+    .w-924 { width: 92.36%; }
+    .w-803 { width: 80.32%; }
+    .chart-scale { display: flex; justify-content: space-between; margin: 17px 53px 0 0; padding-top: 8px; border-top: 1px solid var(--line); color: var(--subtle); font: 9px/1.5 var(--mono); }
+    .evidence-footnote { display: flex; align-items: flex-start; justify-content: space-between; gap: 30px; margin-top: 22px; }
+    .evidence-footnote p { max-width: 670px; color: var(--subtle); font-size: 11px; }
+    .evidence-footnote a { flex: 0 0 auto; }
+
+    /* ===== Pricing ===== */
+    .pricing-heading { text-align: center; margin-bottom: 44px; }
+    .pricing-heading .eyebrow { justify-content: center; }
+    .pricing-heading p { margin: 19px auto 0; max-width: 480px; color: var(--muted); font-size: 15px; }
+    .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    .pricing-card { display: flex; flex-direction: column; padding: 32px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+    .pricing-card.pro { border-color: var(--accent-line); background: linear-gradient(135deg, var(--accent-soft), transparent 65%), var(--panel); }
+    .plan-topline { display: flex; align-items: center; justify-content: space-between; gap: 15px; }
+    .plan-topline h3 { font-size: 20px; }
+    .license-tag { color: var(--subtle); font: 10px/1.5 var(--mono); }
+    .price { display: flex; align-items: baseline; gap: 12px; margin-top: 26px; }
+    .price-amount { font-size: 48px; line-height: 1.1; letter-spacing: -.055em; font-weight: 580; }
+    .price-term { color: var(--muted); font-size: 13px; }
+    .plan-description { margin-top: 12px; min-height: 20px; color: var(--muted); font-size: 13px; }
+    .plan-features { display: grid; align-content: start; gap: 12px; list-style: none; padding: 24px 0 0; margin: 24px 0 27px; border-top: 1px solid var(--line); }
+    .plan-features li { display: flex; align-items: center; gap: 11px; min-height: 22px; color: var(--muted); font-size: 13px; }
+    .plan-features .icon { flex: none; width: 16px; height: 16px; color: var(--accent); margin-top: 0; }
+    .plan-bottom { margin-top: auto; }
+    .plan-bottom .button { width: 100%; }
+    .plan-requirement { margin-top: 12px; min-height: 15px; color: var(--subtle); text-align: center; font: 10px/1.5 var(--mono); }
+
+    /* ===== Order form ===== */
+    .order-panel {
+      display: grid;
+      grid-template-columns: .78fr 1.22fr;
+      gap: 64px;
+      margin-top: 24px;
+      padding: 40px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-deep);
+      scroll-margin-top: 100px;
+    }
+    .order-panel[hidden] { display: none; }
+    .order-intro h3 { font-size: 28px; letter-spacing: -.035em; }
+    .order-intro > p { margin-top: 15px; color: var(--muted); font-size: 14px; max-width: 290px; }
+    .order-steps { display: grid; gap: 20px; list-style: none; margin: 29px 0; padding: 0; }
+    .order-steps li { display: flex; align-items: flex-start; gap: 12px; font-size: 12px; color: var(--muted); }
+    .step-number { display: grid; place-items: center; flex: 0 0 auto; width: 23px; height: 23px; border: 1px solid var(--line); border-radius: 50%; color: var(--accent); font: 10px/1 var(--mono); }
+    .order-steps strong { color: var(--ink); font-weight: 500; display: block; }
+    .order-steps small { color: var(--subtle); font-size: 11px; }
+    .install-command { display: flex; align-items: center; gap: 10px; width: fit-content; max-width: 100%; padding: 11px 14px; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; }
+    .install-command span { color: var(--accent); font: 12px/1.5 var(--mono); }
+    .order-intro > p + .install-command { margin-top: 29px; }
+    .install-command code { font-size: 11px; overflow-wrap: anywhere; }
+    .order-support { display: inline-block; margin-top: 24px; color: var(--muted); font-size: 11px; text-decoration: underline; text-underline-offset: 4px; }
+    .order-support:hover { color: var(--accent); }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 19px 16px; }
+    .field { min-width: 0; }
+    .field.full { grid-column: 1 / -1; }
+    label { display: block; margin-bottom: 7px; color: var(--ink); font-size: 12px; font-weight: 500; }
+    .optional { color: var(--subtle); font-size: 11px; font-weight: 400; }
+    input, textarea {
+      display: block;
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 16px;
+      line-height: 1.5;
+      transition: border-color .18s ease, box-shadow .18s ease;
+    }
+    input:hover, textarea:hover { border-color: var(--subtle); }
+    input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+    input:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    textarea { min-height: 91px; resize: vertical; }
+    .field-hint { margin-top: 6px; color: var(--subtle); font-size: 11px; }
+    .form-submit { width: 100%; margin-top: 23px; }
+    button:disabled { opacity: .6; cursor: wait; transform: none; }
+    #form-error { margin-top: 16px; border: 1px solid var(--warm); border-radius: 6px; padding: 12px; color: var(--warm); font-size: 13px; }
+    #form-error[hidden] { display: none; }
+    .invoice-note { margin-top: 15px; color: var(--subtle); font-size: 11px; line-height: 1.85; }
+
+    /* ===== FAQ ===== */
+    .faq-section { padding-top: 6px; padding-bottom: 104px; }
+    .faq-layout { display: grid; grid-template-columns: .72fr 1.28fr; gap: 88px; padding-top: 74px; border-top: 1px solid var(--line); }
+    .faq-heading h2 { font-size: clamp(2rem, 3vw, 2.6rem); }
+    .faq-heading > p { max-width: 260px; margin-top: 18px; color: var(--muted); font-size: 14px; }
+    .faq-heading .text-link { margin-top: 18px; }
+    .faq-list { border-top: 1px solid var(--line); }
+    details { border-bottom: 1px solid var(--line); }
+    summary { position: relative; list-style: none; cursor: pointer; padding: 21px 36px 21px 0; font-size: 14px; font-weight: 500; line-height: 1.55; }
+    summary::-webkit-details-marker { display: none; }
+    summary::before, summary::after { content: ""; position: absolute; right: 5px; top: 31px; width: 11px; height: 1px; background: var(--subtle); }
+    summary::after { transform: rotate(90deg); }
+    details[open] summary::after { transform: rotate(0); }
+    details[open] summary { color: var(--accent); }
+    summary:hover { color: var(--accent); }
+    details p { max-width: 540px; padding: 0 30px 22px 0; color: var(--muted); font-size: 13px; line-height: 1.85; }
+    details p a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+
+    /* ===== Footer ===== */
+    .site-footer { border-top: 1px solid var(--line); padding: 37px 0 28px; background: var(--panel-deep); }
+    .footer-top { display: flex; align-items: center; justify-content: space-between; gap: 28px; }
+    .footer-top .wordmark { font-size: 21px; }
+    .footer-top .brand-icon { width: 28px; height: 28px; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 12px 24px; }
+    .footer-links a { color: var(--muted); font-size: 12px; }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-bottom { display: flex; justify-content: space-between; gap: 20px; padding-top: 27px; margin-top: 27px; border-top: 1px solid var(--line); color: var(--subtle); font: 10px/1.7 var(--mono); }
+    .footer-privacy { display: flex; align-items: center; gap: 8px; }
+    .footer-privacy .icon { width: 12px; height: 12px; color: var(--accent); }
+
+    /* ===== Responsive behavior ===== */
+    @media (min-width: 1280px) {
+      .hero-grid { gap: 62px; }
+      .code-card pre { font-size: 12.5px; }
+    }
+    @media (max-width: 1050px) {
+      .hero-grid { gap: 30px; }
+      h1 { font-size: clamp(3.2rem, 6vw, 4.3rem); }
+      .code-card pre { font-size: 11px; padding-inline: 15px; }
+      .feature-body { padding-inline: 20px; }
+      .feature-body h3 { font-size: 18px; }
+      .feature-visual { padding-inline: 18px; }
+      .architecture-node { min-width: 76px; font-size: 9px; }
+      .order-panel { gap: 35px; }
+      .faq-layout { gap: 50px; }
+    }
+    @media (max-width: 850px) {
+      .hero { padding-top: 64px; padding-bottom: 55px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 28px; }
+      .hero-copy { max-width: 620px; }
+      h1 { font-size: clamp(3.7rem, 9vw, 5.4rem); max-width: 680px; }
+      .hero-description { max-width: 500px; }
+      .code-stage { width: 100%; max-width: 620px; padding-top: 10px; }
+      .code-card pre { font-size: 13px; padding: 24px; }
+      .section { padding-block: 76px; }
+      .section-heading { align-items: flex-start; flex-direction: column; gap: 20px; }
+      .section-heading > p { max-width: 490px; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .feature-card { display: grid; grid-template-columns: .8fr 1.2fr; }
+      .feature-visual { height: 100%; min-height: 215px; border-bottom: none; border-right: 1px solid var(--line); }
+      .feature-body { padding: 25px; }
+      .feature-body h3 { font-size: 20px; }
+      .evidence-grid { grid-template-columns: 1fr; }
+      .comparison th:first-child { width: 50%; }
+      .chart { padding-bottom: 25px; }
+      .bar-group + .bar-group { margin-top: 24px; }
+      .evidence-footnote { flex-direction: column; gap: 14px; }
+      .pricing-card { padding: 26px; }
+      .price { align-items: flex-start; flex-direction: column; gap: 5px; }
+      .plan-topline { align-items: flex-start; flex-direction: column; gap: 10px; }
+      .order-panel { grid-template-columns: 1fr; gap: 30px; padding: 30px; }
+      .order-intro > p { max-width: 440px; }
+      .order-steps { grid-template-columns: repeat(3, 1fr); gap: 15px; }
+      .install-command { display: none; }
+      .order-support { margin-top: 0; }
+      .order-intro > p ~ .order-support { margin-top: 18px; }
+      .faq-layout { grid-template-columns: 1fr; gap: 35px; }
+      .faq-heading > p { max-width: none; }
+      .footer-top { align-items: flex-start; }
+      .footer-links { justify-content: flex-end; }
+    }
+    @media (max-width: 600px) {
+      html { scroll-padding-top: 84px; }
+      .container { width: calc(100% - 40px); }
+      .nav { min-height: 66px; gap: 17px; }
+      .wordmark { font-size: 22px; gap: 8px; }
+      .brand-icon { width: 29px; height: 29px; }
+      .nav-links { gap: 0; }
+      .nav-links .nav-section-link { display: none; }
+      .nav-links > a { font-size: 12px; }
+      .nav-cta { min-height: 36px; font-size: 11px; padding: 8px 10px; }
+      .nav-cta .icon { width: 13px; height: 13px; }
+      .hero { padding-top: 43px; }
+      .release { margin-bottom: 25px; font-size: 9px; }
+      h1 { font-size: clamp(3.3rem, 13.3vw, 4.6rem); }
+      .hero-description { font-size: 16px; margin-top: 21px; }
+      .hero-actions { margin-top: 25px; gap: 9px; }
+      .hero-actions .button { padding-inline: 14px; font-size: 13px; }
+      .hero-footnote { font-size: 10px; gap: 8px; }
+      .code-card pre { padding: 20px 14px; font-size: 10.5px; line-height: 2.1; }
+      .code-toolbar { padding-inline: 14px; }
+      .transaction-preview { padding: 16px 13px; }
+      .db-row { font-size: 10px; padding: 9px; }
+      .db-row .row-data { font-size: 9px; }
+      .transaction-caption { font-size: 9px; }
+      .proof { padding-bottom: 0; }
+      .proof-topline { align-items: flex-start; }
+      .proof-topline .eyebrow { max-width: 180px; font-size: 9px; }
+      .proof-topline .text-link { font-size: 11px; white-space: nowrap; }
+      .proof-topline .text-link .icon { width: 14px; height: 14px; }
+      .proof-grid { grid-template-columns: 1fr; padding: 0; }
+      .metric, .metric:first-child { padding: 23px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: center; }
+      .metric + .metric { border-left: none; border-top: 1px solid var(--line); }
+      .metric-number { font-size: 26px; }
+      .metric-number small { font-size: .43em; }
+      .metric-label { margin: 0; font-size: 11px; }
+      .method-note { font-size: 9px; }
+      .section { padding-block: 65px; }
+      .eyebrow { font-size: 10px; margin-bottom: 15px; }
+      .section-heading { margin-bottom: 30px; }
+      h2 { font-size: 33px; }
+      .feature-card { display: block; }
+      .feature-visual { min-height: 0; height: 177px; border-right: none; border-bottom: 1px solid var(--line); }
+      .architecture { max-width: 275px; }
+      .architecture-node { min-width: 92px; font-size: 10px; }
+      .feature-body { padding: 23px; }
+      .feature-body h3 { font-size: 21px; }
+      .panel-heading { padding: 23px 20px 20px; }
+      .comparison { width: calc(100% - 20px); margin-inline: 10px; font-size: 11px; }
+      .comparison th, .comparison td { padding-inline: 6px; }
+      .comparison th:first-child { width: 43%; }
+      .comparison thead th { font-size: 9px; }
+      .panel-note { padding-inline: 20px; font-size: 9px; }
+      .chart-legend { margin-inline: 20px; font-size: 9px; gap: 12px; }
+      .chart { padding-inline: 20px; }
+      .bar-group-heading { font-size: 9px; }
+      .pricing-heading { text-align: left; margin-bottom: 30px; }
+      .pricing-heading .eyebrow { justify-content: flex-start; }
+      .pricing-heading p { margin-left: 0; font-size: 14px; }
+      .pricing-grid { grid-template-columns: 1fr; gap: 18px; }
+      .pricing-card { padding: 25px; }
+      .plan-topline { align-items: center; flex-direction: row; }
+      .price { align-items: baseline; flex-direction: row; gap: 12px; }
+      .order-panel { padding: 24px 20px; scroll-margin-top: 85px; }
+      .order-intro h3 { font-size: 25px; }
+      .order-intro > p { font-size: 13px; }
+      .order-steps { grid-template-columns: 1fr; gap: 16px; margin-block: 24px; }
+      .order-steps strong { display: inline; }
+      .order-steps small { display: block; }
+      .form-grid { grid-template-columns: 1fr; gap: 17px; }
+      .faq-section { padding-top: 0; padding-bottom: 65px; }
+      .faq-layout { padding-top: 55px; }
+      .footer-top { flex-direction: column; gap: 25px; }
+      .footer-links { justify-content: flex-start; gap: 14px 22px; }
+      .footer-bottom { flex-direction: column; gap: 12px; font-size: 9px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .button-primary:hover { transform: none; }
+    }
+    .ext { display: inline-block; margin-left: 0.25em; vertical-align: -1px; opacity: 0.7; }
+</style>
 </head>
+
 <body>
-  <div class="wrap">
+  <a class="skip-link" href="#main">Skip to content</a>
 
-    <header class="top">
-      <div class="wordmark"><span data-brand>Oxpull</span><span class="pro">Pro</span></div>
-      <div class="top-note">$399 per year</div>
-    </header>
+  <!-- INLINE SVG LIBRARY -->
+  <svg class="svg-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <symbol id="ox-mark" viewBox="0 0 32 32">
+        <path d="M10 10C6 10 3.5 7.5 3 3.5C.8 9.5 3.7 14 9 14.5L10.6 23.4L16 28L21.4 23.4L23 14.5C28.3 14 31.2 9.5 29 3.5C28.5 7.5 26 10 22 10L19.5 8H12.5Z" fill="currentColor"/>
+        <path d="M10.5 15L14 17M21.5 15L18 17M13 22H19" fill="none" stroke="var(--bg)" stroke-width="1.8" stroke-linecap="round"/>
+      </symbol>
+      <symbol id="arrow-right" viewBox="0 0 24 24">
+        <path d="M5 12H19M13 6L19 12L13 18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="arrow-up-right" viewBox="0 0 24 24">
+        <path d="M6 18L18 6M6 6H18V18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="check" viewBox="0 0 24 24">
+        <path d="M5 12L10 17L19 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="cross" viewBox="0 0 24 24">
+        <path d="M7 7L17 17M17 7L7 17" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </symbol>
+      <symbol id="database" viewBox="0 0 24 24">
+        <ellipse cx="12" cy="5.5" rx="8" ry="3.5" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M4 5.5V18.5C4 20.4 7.6 22 12 22S20 20.4 20 18.5V5.5M4 12C4 13.9 7.6 15.5 12 15.5S20 13.9 20 12" fill="none" stroke="currentColor" stroke-width="1.5"/>
+      </symbol>
+      <symbol id="worker" viewBox="0 0 24 24">
+        <rect x="4" y="4" width="16" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M8 9L11 12L8 15M14 15H17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="file-code" viewBox="0 0 24 24">
+        <path d="M14 3H6A2 2 0 0 0 4 5V19A2 2 0 0 0 6 21H18A2 2 0 0 0 20 19V9ZM14 3V9H20M9 12L7 14L9 16M15 12L17 14L15 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="row" viewBox="0 0 24 24">
+        <rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M3 10H21M9 10V19" fill="none" stroke="currentColor" stroke-width="1.5"/>
+      </symbol>
+      <symbol id="shield" viewBox="0 0 24 24">
+        <path d="M12 3L20 6V11C20 16 16.7 19.1 12 22C7.3 19.1 4 16 4 11V6Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M8 12L11 15L16 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </symbol>
+    </defs>
+  </svg>
 
-    <main>
-      <section class="hero">
-        <p class="eyebrow">django.tasks &middot; Django 5.2 LTS+</p>
-        <h1>Django Tasks on your database</h1>
-        <p class="lede">Retries, recovery and schedules included.
-          <strong><span data-package>django-ox</span></strong> runs background tasks without
-          Redis, RabbitMQ or any other broker.</p>
-        <p class="hero-sub"><a href="https://oxpull.com/django-ox/background-tasks/">Follow the
-          step-by-step guide</a> &middot;
-          <a href="https://oxpull.com/django-ox/benchmarks/">Read the benchmark and failure
-          results</a></p>
+  <!-- BLOCK: STICKY NAVIGATION -->
+  <header class="site-header">
+    <nav class="container nav" aria-label="Main navigation">
+      <a class="wordmark" href="#" aria-label="Oxpull home">
+        <svg class="brand-icon" aria-hidden="true"><use href="#ox-mark"/></svg>
+        <span>Oxpull</span>
+      </a>
+      <div class="nav-links">
+        <a class="nav-section-link" href="#features">Why django-ox</a>
+        <a class="nav-section-link" href="#benchmarks">Benchmarks</a>
+        <a class="nav-section-link" href="#pricing">Pricing</a>
+        <a target="_blank" rel="noopener" href="https://oxpull.com/django-ox/background-tasks/">Docs <svg class="ext" aria-hidden="true" viewBox="0 0 12 12" width="11" height="11"><path d="M4.5 2H2v8h8V7.5M7 2h3v3M10 2 5.5 6.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+      <a class="button button-secondary nav-cta" href="#order">
+        Get Pro
+        <svg class="icon" aria-hidden="true"><use href="#arrow-up-right"/></svg>
+      </a>
+    </nav>
+  </header>
 
-        <figure class="txn">
-<pre><code><span class="dim">with</span> transaction.atomic():
-<span class="atomic">    order = Order.objects.create(...)
-    send_confirmation.enqueue(order.pk)</span>
-<span class="dim"># one COMMIT. Both rows exist, or neither does.</span></code></pre>
-          <figcaption>The task row and the order row share a transaction</figcaption>
-        </figure>
-      </section>
-
-      <section class="bench">
-        <h2>One fewer service to run</h2>
-        <p>Tasks are rows in the database your application already runs. A management command
-          runs the worker. You still deploy and monitor a worker process. You do not add a
-          broker to run background tasks.</p>
-      </section>
-
-      <section class="bench">
-        <h2>A killed worker's task returns</h2>
-        <p>With <code>LOCK_TIMEOUT</code> 15 s, <span data-package>django-ox</span> finished
-          2,000 of 2,000 tasks in every kill trial (20 kills each). django-tasks-db left 13 to
-          19 stuck RUNNING. Default recovery bound: about 330 s. At-least-once: effects
-          repeated 7 times in 10,000 tasks, so make them idempotent.</p>
-      </section>
-
-      <section class="bench">
-        <h2>Commit tasks with application rows</h2>
-        <p><code>enqueue()</code> is one INSERT. Inside <code>transaction.atomic()</code> the
-          task commits or rolls back with the rows beside it. A broker cannot share that
-          transaction. There is no window where an order exists without its email task. Keep
-          the queue and those models on one database.</p>
-      </section>
-
-      <!--
-        DRAFT OPTIONS for Philip, not rendered; delete this comment before deploy.
-
-        The section below is OPTION A: method facts and links, no figures. Publication is
-        decided cell by cell. If a cell is kept, its sentence goes in as a second paragraph
-        of the section, after the method paragraph. Source: django-ox 1.3.0 against
-        django-tasks-db 0.13.0 on 2026-09-19, raw files results-raw-2026-09-19.json and
-        results-kill-2026-09-19.json in the benchmarks directory of the repository.
-
-        [OPTION B] OPTION A plus the drain sentence:
-
-          <p>In today's run <span data-package>django-ox</span> drained 2,000 and 20,000
-            queued tasks 10-18% faster than django-tasks-db with matched worker
-            processes.</p>
-
-          Caption for the row it comes from (from the harness README; reconcile with the
-          benchmarks page draft before deploy): N = 2,000 or 20,000 no-op tasks preloaded
-          as READY before the clock, ANALYZE after the preload; the clock starts before the
-          worker processes spawn and stops on the poll that sees N SUCCESSFUL rows; one
-          worker process per backend (1v1) or four per backend (4v4); median of five runs;
-          faster means tasks per second.
-
-          Checked against the raw file: median gain 14.1% (2,000, 1v1), 10.1% (2,000, 4v4),
-          18.3% (20,000, 1v1), 15.0% (20,000, 4v4). No run of one backend overlaps any run
-          of the other in any cell. Read as time saved instead of rate gained the range is
-          9-16%. "In today's run" must become the date before deploy.
-
-        [OPTION C] OPTION A plus the kill-test sentence:
-
-          <p>After 20 worker kills per trial, <span data-package>django-ox</span> finished
-            2,000 of 2,000 tasks in every trial; django-tasks-db left 13-19 tasks stuck
-            RUNNING per trial.</p>
-
-          Caption for the row it comes from (from the harness README; reconcile with the
-          benchmarks page draft before deploy): N = 2,000 tasks enqueued as due per trial,
-          one worker process per backend, SIGKILL 20 times per trial at gaps of 3 to 10 s
-          drawn once per trial and shared by both backends, a replacement worker started
-          after each kill, no supervisor; observed until 30 s pass with no status change,
-          then 120 s more; django-ox LOCK_TIMEOUT 15 s (the default is 300 s), reap interval
-          7.5 s, reclaim bound 23.5 s; five trials per backend.
-
-          Checked against the raw file: django-ox SUCCESSFUL 2,000 of 2,000 in trials 1 to 5,
-          rows never terminal 0; django-tasks-db rows RUNNING at the end 19, 16, 13, 15, 18.
-          In the same file and not in the sentence: django-ox repeated a task's effect
-          1, 1, 1, 2, 2 times per trial (a kill between the effect and the outcome write,
-          the at-least-once gap), and its longest reclaim was 22.5 s against the 23.5 s bound.
-      -->
-      <section class="bench">
-        <h2>Measured, not promised</h2>
-        <p><span data-package>django-ox</span> is benchmarked against django-tasks-db, the
-          other database backend for Django's Tasks API. Both run on the core Tasks API,
-          against the same PostgreSQL database, on the same machine. Every cell is five
-          runs, and every run behind a published figure is on the page, not a best pick.
-          A worker-death test kills a worker process 20 times per trial and counts what
-          each backend does with the tasks it was running. The
-          <a href="https://oxpull.com/django-ox/benchmarks/">benchmarks page</a> carries
-          the method, the figures and the raw files.</p>
-        <p class="caveat">The benchmark task bodies do nothing, so the rates measure
-          framework overhead. Read them as relative, not as capacity planning. The
-          <a href="https://oxpull.com/django-ox/stability/">API stability page</a> states
-          what counts as public API and how versions change.</p>
-      </section>
-
-      <section>
-        <h2>Free and paid</h2>
-        <p><strong>Free worker. Paid coordination features.</strong></p>
-        <p>The free package includes retries, worker-death recovery, recurring schedules,
-          admin pages and health checks.
-          It is BSD 3-Clause.
-          <span data-brand>Oxpull</span> Pro adds batches, unique tasks, rate limiting and
-          workflows.</p>
-
-        <div class="tiers">
-          <div class="tier">
-            <h3><span data-package>django-ox</span> <span class="tag">BSD-3 &middot; free</span></h3>
-            <ul>
-              <li>Durable queue in your existing database</li>
-              <li>Transactional enqueue</li>
-              <li>At-least-once execution, SKIP LOCKED claiming on PostgreSQL and MySQL 8</li>
-              <li>Retries with backoff, per-attempt tracebacks</li>
-              <li>Reaper for tasks from dead workers</li>
-              <li>Graceful drain on SIGTERM</li>
-              <li>Priorities, deferred tasks, multiple queues</li>
-              <li>Recurring schedules, cron or fixed interval, in settings or the Django admin</li>
-              <li>Pruning command for finished rows</li>
-              <li>Stats API and health command</li>
-            </ul>
-            <p class="note">PostgreSQL, SQLite and MySQL 8, all tested in CI. Live now:
-              <code>pip install django-ox</code>, or
-              <code>pip install "django-ox[backport]"</code> on Django 5.2 LTS &middot;
-              <a href="https://github.com/oxpull/django-ox">GitHub</a> &middot;
-              <a href="https://oxpull.com/django-ox/">docs</a> &middot;
-              <a href="https://oxpull.com/django-ox/choosing/">how it compares</a>.</p>
+  <main id="main">
+    <!-- BLOCK: HERO -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <h1 id="hero-title">Django tasks in your <span>database</span></h1>
+          <p class="hero-description">Stop running Redis to send an email. Queue work in your existing database, where a dead worker doesn't mean lost tasks.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="https://oxpull.com/django-ox/background-tasks/">
+              Get started
+              <svg class="icon" aria-hidden="true"><use href="#arrow-right"/></svg>
+            </a>
+            <a class="button button-secondary" href="https://oxpull.com/django-ox/benchmarks/">
+              See the benchmarks
+              <svg class="icon" aria-hidden="true"><use href="#arrow-up-right"/></svg>
+            </a>
           </div>
-          <div class="tier pro-tier">
-            <h3><span data-brand>Oxpull</span> Pro <span class="tag">commercial license</span></h3>
-            <ul>
-              <li>Batches: group tasks, with a callback when every member is settled</li>
-              <li>Unique tasks (deduplication)</li>
-              <li>Rate limiting</li>
-              <li>Workflows: a set of tasks with dependencies, where a node
-                runs only after every node it depends on has succeeded</li>
-              <li>Email support from the maintainer</li>
-              <li>Requires Django 6.0 or later</li>
-            </ul>
-            <p class="note">Delivered from a private package index using credentials issued per
-              company. Install stays <code>pip install</code>.
-              <a href="#order">Order below</a>.</p>
+          <p class="hero-footnote">
+            <span>Open source</span>
+            <span class="separator" aria-hidden="true"></span>
+            <span>BSD 3-Clause</span>
+            <span class="separator" aria-hidden="true"></span>
+            <span><code>pip install django-ox</code></span>
+          </p>
+        </div>
+
+        <div class="code-stage">
+          <div class="code-card">
+            <div class="code-toolbar">
+              <span class="file-label">
+                <svg class="icon" aria-hidden="true"><use href="#file-code"/></svg>
+                orders/tasks.py
+              </span>
+              <span class="file-type">Python</span>
+            </div>
+            <pre aria-label="Enqueue a task in the same transaction as an order" tabindex="0"><code><span class="syntax-keyword">with</span> transaction.<span class="syntax-function">atomic</span>():
+    order = <span class="syntax-type">Order</span>.objects.<span class="syntax-function">create</span>(...)
+    send_confirmation.<span class="syntax-function">enqueue</span>(order.pk)</code></pre>
+
+            <div class="transaction-preview" role="img" aria-label="One database transaction commits both the order row and the background task row.">
+              <div class="preview-heading">
+                <span class="preview-label">One transaction</span>
+                <span class="pill"><span class="dot"></span>COMMIT</span>
+              </div>
+              <div class="db-rows">
+                <div class="db-row">
+                  <svg class="icon" aria-hidden="true"><use href="#row"/></svg>
+                  <span>orders_order</span>
+                  <span class="row-data">id: 1042</span>
+                  <span class="row-check"><svg class="icon" aria-hidden="true"><use href="#check"/></svg></span>
+                </div>
+                <div class="db-row">
+                  <svg class="icon" aria-hidden="true"><use href="#row"/></svg>
+                  <span>send_confirmation</span>
+                  <span class="row-data">[1042]</span>
+                  <span class="row-check"><svg class="icon" aria-hidden="true"><use href="#check"/></svg></span>
+                </div>
+              </div>
+              <p class="transaction-caption">Both rows commit, or neither does.</p>
+            </div>
           </div>
         </div>
-        <p>No license key, no runtime check, no telemetry. A lapsed credential does not stop
-          deployed code. Pro requires Django 6.0+.</p>
-      </section>
+      </div>
+    </section>
 
-      <section id="order">
-        <h2>Pricing and ordering</h2>
-        <p class="price-line"><strong>$399 per year, per company</strong>, excluding VAT where it applies.
-          No trial keys.</p>
-        <p class="price-line">Fill in the form and the invoice goes out within two business days.
-          When it's paid, the credentials for the private package index arrive by email, and
-          install is <code>pip install</code>.</p>
+    <!-- BLOCK: PROOF STRIP -->
+    <section class="proof container">
 
-        <div class="signup">
-          <form id="order-form" method="post">
-            <div class="field">
-              <label for="company">Company</label>
-              <input type="text" id="company" name="company" required autocomplete="organization">
+      <div class="proof-grid">
+        <div class="metric">
+          <p class="metric-number">2,000 <small>of</small> <span class="highlight">2,000</span></p>
+          <p class="metric-label">Tasks finished after 20 worker kills per trial</p>
+        </div>
+        <div class="metric">
+          <p class="metric-number"><small>up to</small> <span class="highlight">20%</span> <small>faster</small></p>
+          <p class="metric-label">Queue drain than django-tasks-db</p>
+        </div>
+        <div class="metric">
+          <p class="metric-number"><span class="highlight">0.71</span> s</p>
+          <p class="metric-label">To enqueue 10,000 tasks</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- BLOCK: VALUE SECTIONS -->
+    <section class="section features" id="features" aria-labelledby="features-title">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <h2 id="features-title">Run fewer services</h2>
+          </div>
+        </div>
+
+        <div class="feature-grid">
+          <!-- VALUE 01: ONE FEWER SERVICE -->
+          <article class="feature-card">
+            <div class="feature-visual" role="img" aria-label="A worker connects directly to your database. No separate message broker sits between them.">
+              <div class="architecture">
+                <div class="architecture-node">
+                  <div class="node-icon"><svg class="icon" aria-hidden="true"><use href="#database"/></svg></div>
+                  <span>Your database</span>
+                </div>
+                <div class="connection"></div>
+                <div class="architecture-node">
+                  <div class="node-icon"><svg class="icon" aria-hidden="true"><use href="#worker"/></svg></div>
+                  <span>Worker</span>
+                </div>
+              </div>
             </div>
-            <div class="field">
-              <label for="contact-name">Contact name</label>
-              <input type="text" id="contact-name" name="contact_name" required autocomplete="name">
+            <div class="feature-body">
+              <h3>Keep the queue in your database</h3>
+              <p>Tasks are rows you can inspect in Django admin. Run a dedicated worker without adding Redis or RabbitMQ.</p>
             </div>
-            <div class="field">
-              <label for="email">Email address</label>
-              <input type="email" id="email" name="email" required autocomplete="email"
-                placeholder="you@company.com">
+          </article>
+
+          <!-- VALUE 02: WORKER RECOVERY -->
+          <article class="feature-card">
+            <div class="feature-visual" role="img" aria-label="When a worker stops, its unfinished task returns to the queue to be picked up again.">
+              <div class="recovery">
+                <div class="recovery-top">
+                  <div class="queue-stack">
+                    <span class="task-tile"></span>
+                    <span class="task-tile"></span>
+                    <span class="task-tile"></span>
+                  </div>
+                  <svg class="icon recovery-arrow" aria-hidden="true"><use href="#arrow-right"/></svg>
+                  <div class="stopped-worker">Worker stopped</div>
+                </div>
+                <div class="return-path"></div>
+                <p class="return-label">Back to the queue</p>
+              </div>
             </div>
-            <div class="field">
-              <label for="billing-address">Billing address</label>
-              <textarea id="billing-address" name="billing_address" required rows="4"
-                autocomplete="street-address"></textarea>
+            <div class="feature-body">
+              <h3>Recover a stopped worker’s tasks</h3>
+              <p>Unfinished tasks return to the queue when a worker dies. You don’t need a separate recovery script.</p>
             </div>
-            <div class="field">
-              <label for="vat-id">VAT ID (optional, for the invoice)</label>
-              <input type="text" id="vat-id" name="vat_id">
+          </article>
+
+          <!-- VALUE 03: ATOMIC TRANSACTIONS -->
+          <article class="feature-card">
+            <div class="feature-visual" role="img" aria-label="A transaction bracket encloses an order row and a task row. Both are committed together.">
+              <div class="atomic-diagram">
+                <div class="db-rows">
+                  <div class="db-row">
+                    <svg class="icon" aria-hidden="true"><use href="#row"/></svg>
+                    <span>order row</span>
+                    <span class="row-data">INSERT</span>
+                  </div>
+                  <div class="db-row">
+                    <svg class="icon" aria-hidden="true"><use href="#row"/></svg>
+                    <span>task row</span>
+                    <span class="row-data">INSERT</span>
+                  </div>
+                </div>
+                <p class="transaction-caption">one COMMIT</p>
+              </div>
             </div>
-            <button type="submit">Order Pro</button>
+            <div class="feature-body">
+              <h3>Commit tasks with your data</h3>
+              <p>Create an order and enqueue its confirmation inside <code>transaction.atomic()</code>. A rollback leaves neither row behind.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- BLOCK: COMPARISON AND DRAIN BENCHMARK -->
+    <section class="section evidence" id="benchmarks" aria-labelledby="evidence-title">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <h2 id="evidence-title">Compare the workers</h2>
+          </div>
+        </div>
+
+        <div class="evidence-grid">
+          <!-- COMPARISON COMPONENT -->
+          <article class="data-panel" aria-labelledby="comparison-title">
+            <div class="panel-heading">
+              <h3 id="comparison-title">Free package features</h3>
+            </div>
+            <div class="comparison-scroll">
+              <table class="comparison">
+                <caption class="sr-only">django-ox 1.3.0 and django-tasks-db 0.13.0</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Capability</th>
+                    <th scope="col" class="our-column">django-ox<span class="table-subtitle">1.3.0</span></th>
+                    <th scope="col">django-tasks-db<span class="table-subtitle">0.13.0</span></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">Retries</th>
+                    <td class="our-column"><span class="status yes"><svg class="icon" aria-hidden="true"><use href="#check"/></svg><span class="sr-only">Included</span></span></td>
+                    <td><span class="status no"><svg class="icon" aria-hidden="true"><use href="#cross"/></svg><span class="sr-only">Not included</span></span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Dead worker’s task returns</th>
+                    <td class="our-column"><span class="status yes"><svg class="icon" aria-hidden="true"><use href="#check"/></svg><span class="sr-only">Included</span></span></td>
+                    <td><span class="status no"><svg class="icon" aria-hidden="true"><use href="#cross"/></svg><span class="sr-only">Not included</span></span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Recurring schedules</th>
+                    <td class="our-column"><span class="status yes"><svg class="icon" aria-hidden="true"><use href="#check"/></svg><span class="sr-only">Included</span></span></td>
+                    <td><span class="status no"><svg class="icon" aria-hidden="true"><use href="#cross"/></svg><span class="sr-only">Not included</span></span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Health command</th>
+                    <td class="our-column"><span class="status yes"><svg class="icon" aria-hidden="true"><use href="#check"/></svg><span class="sr-only">Included</span></span></td>
+                    <td><span class="status no"><svg class="icon" aria-hidden="true"><use href="#cross"/></svg><span class="sr-only">Not included</span></span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Bulk enqueue</th>
+                    <td class="our-column"><span class="status yes"><svg class="icon" aria-hidden="true"><use href="#check"/></svg><span class="sr-only">Included</span></span></td>
+                    <td><span class="status no"><svg class="icon" aria-hidden="true"><use href="#cross"/></svg><span class="sr-only">Not included</span></span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <!-- DRAIN BENCHMARK COMPONENT -->
+          <article class="data-panel" aria-labelledby="drain-title">
+            <div class="panel-heading">
+              <h3 id="drain-title">Up to 20% faster queue drain than django-tasks-db</h3>
+              <p>Tasks per second. Higher is better.</p>
+            </div>
+            <div class="chart-legend" aria-hidden="true">
+              <span class="legend-item"><span class="legend-swatch"></span>django-ox</span>
+              <span class="legend-item"><span class="legend-swatch baseline"></span>django-tasks-db</span>
+            </div>
+            <div class="chart">
+              <div class="bar-group">
+                <h4 class="bar-group-heading"><strong>2,000 tasks, 1 worker</strong></h4>
+                <div class="bar-pair">
+                  <div class="bar-row">
+                    <span class="sr-only">django-ox: </span>
+                    <div class="bar-track" aria-hidden="true"><div class="bar w-237"></div></div>
+                    <span class="bar-value">118.5<span class="sr-only"> tasks per second</span></span>
+                  </div>
+                  <div class="bar-row baseline">
+                    <span class="sr-only">django-tasks-db: </span>
+                    <div class="bar-track" aria-hidden="true"><div class="bar baseline w-208"></div></div>
+                    <span class="bar-value">103.9<span class="sr-only"> tasks per second</span></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bar-group">
+                <h4 class="bar-group-heading"><strong>2,000 tasks, 4 workers</strong></h4>
+                <div class="bar-pair">
+                  <div class="bar-row">
+                    <span class="sr-only">django-ox: </span>
+                    <div class="bar-track" aria-hidden="true"><div class="bar w-853"></div></div>
+                    <span class="bar-value">426.3<span class="sr-only"> tasks per second</span></span>
+                  </div>
+                  <div class="bar-row baseline">
+                    <span class="sr-only">django-tasks-db: </span>
+                    <div class="bar-track" aria-hidden="true"><div class="bar baseline w-774"></div></div>
+                    <span class="bar-value">387.1<span class="sr-only"> tasks per second</span></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bar-group">
+                <h4 class="bar-group-heading"><strong>20,000 tasks, 1 worker</strong></h4>
+                <div class="bar-pair">
+                  <div class="bar-row">
+                    <span class="sr-only">django-ox: </span>
+                    <div class="bar-track" aria-hidden="true"><div class="bar w-230"></div></div>
+                    <span class="bar-value">115.2<span class="sr-only"> tasks per second</span></span>
+                  </div>
+                  <div class="bar-row baseline">
+                    <span class="sr-only">django-tasks-db: </span>
+                    <div class="bar-track" aria-hidden="true"><div class="bar baseline w-195"></div></div>
+                    <span class="bar-value">97.4<span class="sr-only"> tasks per second</span></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bar-group">
+                <h4 class="bar-group-heading"><strong>20,000 tasks, 4 workers</strong></h4>
+                <div class="bar-pair">
+                  <div class="bar-row">
+                    <span class="sr-only">django-ox: </span>
+                    <div class="bar-track" aria-hidden="true"><div class="bar w-924"></div></div>
+                    <span class="bar-value">461.8<span class="sr-only"> tasks per second</span></span>
+                  </div>
+                  <div class="bar-row baseline">
+                    <span class="sr-only">django-tasks-db: </span>
+                    <div class="bar-track" aria-hidden="true"><div class="bar baseline w-803"></div></div>
+                    <span class="bar-value">401.6<span class="sr-only"> tasks per second</span></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="chart-scale" aria-hidden="true"><span>0</span><span>250</span><span>500 tasks/s</span></div>
+            </div>
+            <p class="panel-note">All bars use a 0–500 tasks/s scale.</p>
+          </article>
+        </div>
+
+        <div class="evidence-footnote">
+          <p>django-ox 1.3.0 vs django-tasks-db 0.13.0 on PostgreSQL 16. Five runs per cell. Results apply to these workloads, not every application.</p>
+          <a class="text-link" href="https://oxpull.com/django-ox/benchmarks/">
+            Methodology and results
+            <svg class="icon" aria-hidden="true"><use href="#arrow-up-right"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- BLOCK: PRICING -->
+    <section class="section" id="pricing" aria-labelledby="pricing-title">
+      <div class="container">
+        <div class="pricing-heading">
+          <h2 id="pricing-title">Choose your package</h2>
+        </div>
+
+        <div class="pricing-grid">
+          <article class="pricing-card" aria-labelledby="free-title">
+            <div class="plan-topline">
+              <h3 id="free-title">django-ox</h3>
+              <span class="license-tag">BSD 3-Clause</span>
+            </div>
+            <div class="price">
+              <span class="price-amount">Free</span>
+              <span class="price-term">Open source</span>
+            </div>
+            <p class="plan-description" aria-hidden="true">&nbsp;</p>
+            <ul class="plan-features">
+              <li><svg class="icon" aria-hidden="true"><use href="#check"/></svg>Database-backed Django Tasks worker</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#check"/></svg>Retries and dead-worker recovery</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#check"/></svg>Recurring schedules</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#check"/></svg>Django admin integration</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#check"/></svg>Health checks and bulk enqueue</li>
+            </ul>
+            <div class="plan-bottom">
+              <a class="button button-secondary" href="https://oxpull.com/django-ox/background-tasks/">
+                Get started
+                <svg class="icon" aria-hidden="true"><use href="#arrow-right"/></svg>
+              </a>
+              <p class="plan-requirement" aria-hidden="true">&nbsp;</p>
+            </div>
+          </article>
+
+          <article class="pricing-card pro" aria-labelledby="pro-title">
+            <div class="plan-topline">
+              <h3 id="pro-title">Oxpull Pro</h3>
+            </div>
+            <div class="price">
+              <span class="price-amount">$399</span>
+              <span class="price-term">Per year, per company</span>
+            </div>
+            <p class="plan-description">Paid add-on. Excluding VAT where it applies.</p>
+            <ul class="plan-features">
+              <li><svg class="icon" aria-hidden="true"><use href="#check"/></svg>Batches</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#check"/></svg>Unique tasks</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#check"/></svg>Rate limiting</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#check"/></svg>Workflows</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#check"/></svg>Email support from the maintainer</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#check"/></svg>Priority feature requests</li>
+            </ul>
+            <div class="plan-bottom">
+              <a class="button button-primary" href="#order">
+                Get Oxpull Pro
+                <svg class="icon" aria-hidden="true"><use href="#arrow-right"/></svg>
+              </a>
+              <p class="plan-requirement">Requires Django 6.0+</p>
+            </div>
+          </article>
+        </div>
+
+        <!-- BLOCK: PRO ORDER FORM -->
+        <section class="order-panel" id="order" aria-labelledby="order-title" hidden>
+          <div class="order-intro">
+            <h3 id="order-title">Request your Pro invoice</h3>
+            <p>$399 per year, per company, excluding VAT where it applies.</p>
+            <div class="install-command"><span aria-hidden="true">$</span><code>pip install</code></div>
+            <a class="order-support" href="mailto:support@oxpull.com">Questions? support@oxpull.com</a>
+          </div>
+
+          <form id="order-form" method="post" aria-labelledby="order-title" aria-describedby="invoice-note">
+            <div class="form-grid">
+              <div class="field full">
+                <label for="company">Company</label>
+                <input type="text" id="company" name="company" autocomplete="organization" required>
+              </div>
+              <div class="field">
+                <label for="contact-name">Contact name</label>
+                <input type="text" id="contact-name" name="contact_name" autocomplete="name" required>
+              </div>
+              <div class="field">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" autocomplete="email" autocapitalize="none" spellcheck="false" required>
+              </div>
+              <div class="field full">
+                <label for="billing-address">Billing address</label>
+                <textarea id="billing-address" name="billing_address" rows="3" autocomplete="street-address" required></textarea>
+              </div>
+              <div class="field full">
+                <label for="vat-id">VAT ID <span class="optional">(optional)</span></label>
+                <input type="text" id="vat-id" name="vat_id" aria-describedby="vat-hint" spellcheck="false">
+                <p class="field-hint" id="vat-hint">For the invoice</p>
+              </div>
+            </div>
+            <button class="button button-primary form-submit" type="submit">
+              Request invoice
+              <svg class="icon" aria-hidden="true"><use href="#arrow-right"/></svg>
+            </button>
+            <p id="form-error" role="alert" hidden></p>
+            <p class="invoice-note" id="invoice-note">Invoice within two business days. Private package index credentials arrive by email once paid. Install stays <code>pip install</code>. Pro requires Django 6.0+.</p>
           </form>
-          <p id="form-error" hidden>That didn't go through. Try again, or write to
-            <a href="mailto:support@oxpull.com">support@oxpull.com</a>.</p>
-          <p class="privacy">These details are used to issue the invoice and the credential,
-            nothing else. Write to <a href="mailto:support@oxpull.com">support@oxpull.com</a>
-            to have them removed.</p>
+        </section>
+      </div>
+    </section>
+
+    <!-- BLOCK: FAQ -->
+    <section class="faq-section" id="faq" aria-labelledby="faq-title">
+      <div class="container faq-layout">
+        <div class="faq-heading">
+          <h2 id="faq-title">FAQ</h2>
+          <a class="text-link" href="mailto:support@oxpull.com">
+            Email the maintainer
+            <svg class="icon" aria-hidden="true"><use href="#arrow-up-right"/></svg>
+          </a>
         </div>
-      </section>
+        <div class="faq-list">
+          <details>
+            <summary>What is django-ox?</summary>
+            <p>A database-backed worker for Django’s Tasks framework. Tasks live in database rows. The free package includes retries, worker recovery and recurring schedules.</p>
+          </details>
+          <details>
+            <summary>Do I need Redis or RabbitMQ?</summary>
+            <p>No. django-ox uses your existing database. You still run a worker process to execute tasks.</p>
+          </details>
+          <details>
+            <summary>What happens if a worker stops mid-task?</summary>
+            <p>Its unfinished task returns to the queue and may run again. Make tasks tolerate repeated execution. External side effects aren’t exactly-once.</p>
+          </details>
+          <details>
+            <summary>Can I enqueue a task inside a database transaction?</summary>
+            <p>Yes. Put the database write and <code>enqueue()</code> inside the same <code>transaction.atomic()</code> block. Both rows must use the same database. They commit or roll back together.</p>
+          </details>
+          <details>
+            <summary>What does Oxpull Pro add?</summary>
+            <p>Batches, unique tasks, rate limiting, workflows and maintainer email support. It costs $399 per year, per company, excluding VAT where it applies. Pro requires Django 6.0+.</p>
+          </details>
+          <details>
+            <summary>How do ordering and installation work?</summary>
+            <p>Submit your company and billing details. Your invoice arrives within two business days. Once paid, private package index credentials arrive by email. Install stays <code>pip install</code>.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
 
-      <section class="faq">
-        <h2>Questions you should ask</h2>
+  <!-- BLOCK: FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <a class="wordmark" href="#" aria-label="Oxpull home">
+          <svg class="brand-icon" aria-hidden="true"><use href="#ox-mark"/></svg>
+          <span>Oxpull</span>
+        </a>
+        <nav class="footer-links" aria-label="Footer navigation">
+          <a target="_blank" rel="noopener" href="https://oxpull.com/django-ox/background-tasks/">Docs <svg class="ext" aria-hidden="true" viewBox="0 0 12 12" width="11" height="11"><path d="M4.5 2H2v8h8V7.5M7 2h3v3M10 2 5.5 6.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <a href="https://oxpull.com/django-ox/benchmarks/">Benchmarks</a>
+          <a target="_blank" rel="noopener" href="https://github.com/oxpull/django-ox">GitHub <svg class="ext" aria-hidden="true" viewBox="0 0 12 12" width="11" height="11"><path d="M4.5 2H2v8h8V7.5M7 2h3v3M10 2 5.5 6.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <a target="_blank" rel="noopener" href="https://pypi.org/project/django-ox/">PyPI <svg class="ext" aria-hidden="true" viewBox="0 0 12 12" width="11" height="11"><path d="M4.5 2H2v8h8V7.5M7 2h3v3M10 2 5.5 6.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <a target="_blank" rel="noopener" href="https://oxpull.com/django-ox/agents/">For AI agents <svg class="ext" aria-hidden="true" viewBox="0 0 12 12" width="11" height="11"><path d="M4.5 2H2v8h8V7.5M7 2h3v3M10 2 5.5 6.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <a href="mailto:support@oxpull.com">support@oxpull.com</a>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-privacy">
+          <svg class="icon" aria-hidden="true"><use href="#shield"/></svg>
+          No analytics, no trackers, no cookies on this page.
+        </p>
+      </div>
+    </div>
+  </footer>
 
-        <h3>What is the license situation?</h3>
-        <p>The worker itself, <span data-package>django-ox</span>, is BSD 3-Clause and stays
-          that way. Pro is separate code under a commercial license, sold per company. The free
-          tier is not a demo. It is the backend the docs mean when they say production systems
-          need a durable queue and a worker process.</p>
-
-        <h3>How do I buy it?</h3>
-        <p>Through the <a href="#order">order form</a> above. Every order is invoiced, and the
-          invoice says how to pay. If procurement needs a PO number on the invoice, or a signed
-          order form, write to <a href="mailto:support@oxpull.com">support@oxpull.com</a>. The
-          open source worker needs no order: <code>pip install django-ox</code>, with
-          <a href="https://oxpull.com/django-ox/">documentation here</a>.</p>
-
-        <h3>Who is behind it?</h3>
-        <p>An independent software vendor with one product: this one. You will know who
-          maintains it, contracts get signed under the company name, and support answers come
-          from the person who wrote the code.</p>
-
-        <h3>What does support look like?</h3>
-        <p>Open source support is on GitHub issues. Pro comes with email support from
-          the maintainer at <a href="mailto:support@oxpull.com">support@oxpull.com</a>.</p>
-
-        <h3>Do I need Pro to run production?</h3>
-        <p>No. Durability, retries, the reaper, and graceful shutdown are all in the free
-          worker, and so are the stats API and the health command. Pro adds four
-          things the free tier does not do: batches, deduplication, rate
-          limiting and workflows.
-          Support comes with it. Pro needs Django 6.0 or later. The free worker also
-          runs on Django 5.2 LTS through the <code>django-tasks</code> backport, and
-          Pro does not.</p>
-      </section>
-
-      <section class="bench">
-        <h2>Project facts</h2>
-        <p class="caveat"><span data-package>django-ox</span> 1.3.0. BSD 3-Clause. Python
-          3.12+. Django 5.2 LTS through the backport extra, 6.0 and 6.1.</p>
-        <p class="caveat">992 test functions. CI runs them on SQLite and PostgreSQL 16 for
-          Python 3.12 to 3.14 and Django 5.2 to 6.1, and on MySQL 8 on the oldest and newest
-          corners.</p>
-        <p class="caveat">One maintainer.</p>
-        <!-- OPTIONAL, not rendered: No named production user yet. -->
-      </section>
-    </main>
-
-    <footer>
-      <p><span data-brand>Oxpull</span> is an independent vendor. Not affiliated with the Django
-        Software Foundation.</p>
-      <p>No analytics, no trackers, no cookies on this page. The only request that leaves it is
-        the form you choose to submit.</p>
-    </footer>
-
-  </div>
-  <script src="config.js"></script>
+  <script src="config.js" defer></script>
+<script>
+  // The order panel stays out of the page until someone asks for it.
+  (function () {
+    var panel = document.getElementById("order");
+    if (!panel) return;
+    function open(ev) {
+      if (ev) ev.preventDefault();
+      panel.hidden = false;
+      panel.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+      var first = panel.querySelector("input, textarea");
+      if (first) first.focus({ preventScroll: true });
+    }
+    document.querySelectorAll('a[href="#order"]').forEach(function (a) { a.addEventListener("click", open); });
+    if (location.hash === "#order") open();
+  })();
+</script>
 </body>
 </html>
