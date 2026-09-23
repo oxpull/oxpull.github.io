@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy. Oxpull</title>
+  <meta name="description" content="What Oxpull holds, why, and for how long.">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0d1410;
+      --panel: #16201b;
+      --panel-deep: #101813;
+      --ink: #eef4ee;
+      --muted: #a4b4a8;
+      --subtle: #8ca093;
+      --accent: #6fc59a;
+      --accent-hover: #8fd8b3;
+      --accent-ink: #0c2417;
+      --accent-soft: rgba(111, 197, 154, .09);
+      --accent-line: rgba(111, 197, 154, .3);
+      --line: #2a382e;
+      --line-soft: rgba(168, 196, 176, .1);
+      --grid: rgba(168, 196, 176, .055);
+      --glow: rgba(74, 144, 98, .13);
+      --nav-bg: rgba(13, 20, 16, .91);
+      --shadow: 0 24px 80px rgba(0, 0, 0, .22);
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      --radius: 16px;
+      --max-width: 1160px;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        color-scheme: light;
+        --bg: #f3f6f2;
+        --panel: #ffffff;
+        --panel-deep: #f6f8f4;
+        --ink: #1b2420;
+        --muted: #526359;
+        --subtle: #617166;
+        --accent: #1f6b4b;
+        --accent-hover: #155339;
+        --accent-ink: #ffffff;
+        --accent-soft: rgba(31, 107, 75, .065);
+        --accent-line: rgba(31, 107, 75, .28);
+        --line: #d7e0d6;
+        --line-soft: rgba(35, 72, 47, .09);
+        --grid: rgba(35, 72, 47, .06);
+        --glow: rgba(90, 161, 111, .13);
+        --nav-bg: rgba(243, 246, 242, .92);
+        --shadow: 0 24px 70px rgba(35, 61, 41, .075);
+      }
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+      color: var(--ink);
+      font: 16px/1.6 var(--font);
+      -webkit-font-smoothing: antialiased;
+    }
+    ::selection { color: var(--accent-ink); background: var(--accent); }
+    a { color: inherit; text-decoration: none; }
+    :focus-visible { outline: 3px solid var(--accent); outline-offset: 5px; }
+    h1, p { margin: 0; }
+    svg { display: block; flex: none; }
+    .svg-library { position: absolute; width: 0; height: 0; overflow: hidden; }
+    .container { width: min(var(--max-width), calc(100% - 64px)); margin-inline: auto; }
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid var(--line-soft);
+      background: var(--nav-bg);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+    .nav { min-height: 76px; display: flex; align-items: center; }
+    .wordmark {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 23px;
+      font-weight: 720;
+      letter-spacing: -.055em;
+    }
+    .brand-icon { width: 32px; height: 32px; color: var(--accent); }
+    main {
+      flex: 1;
+      padding-block: clamp(48px, 9vw, 104px);
+      background:
+        radial-gradient(ellipse at 75% 0, var(--glow), transparent 65%),
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: auto, 56px 56px, 56px 56px;
+    }
+    .thanks {
+      max-width: 680px;
+      margin-inline: auto;
+      padding: clamp(24px, 5vw, 48px);
+      border: 1px solid var(--accent-line);
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, var(--accent-soft), transparent 65%), var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .check {
+      width: 44px;
+      height: 44px;
+      margin-bottom: 25px;
+      padding: 11px;
+      border: 1px solid var(--accent-line);
+      border-radius: 10px;
+      color: var(--accent);
+      background: var(--accent-soft);
+    }
+    h1 {
+      font-size: clamp(2.7rem, 6vw, 4rem);
+      font-weight: 620;
+      letter-spacing: -.064em;
+      line-height: 1.025;
+      text-wrap: balance;
+    }
+    .thanks p { margin-top: 25px; color: var(--muted); }
+    code {
+      padding: .1em .35em;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: var(--panel-deep);
+      color: var(--ink);
+      font: .88em var(--mono);
+      overflow-wrap: anywhere;
+    }
+    .thanks p a { color: var(--accent); text-decoration: underline; text-underline-offset: 4px; }
+    .thanks p a:hover { color: var(--accent-hover); }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      margin-top: 30px;
+      padding: 11px 19px;
+      border: 1px solid var(--accent);
+      border-radius: 7px;
+      background: var(--accent);
+      color: var(--accent-ink);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.4;
+      box-shadow: 0 2px 0 rgba(0, 0, 0, .08);
+    }
+    .button:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+    .site-footer { padding: 37px 0 28px; border-top: 1px solid var(--line); background: var(--panel-deep); }
+    .site-footer .wordmark { font-size: 21px; }
+    .site-footer .brand-icon { width: 28px; height: 28px; }
+    .footer-bottom {
+      margin-top: 27px;
+      padding-top: 27px;
+      border-top: 1px solid var(--line);
+      color: var(--subtle);
+      font: 10px/1.7 var(--mono);
+    }
+    @media (max-width: 600px) {
+      .container { width: calc(100% - 40px); }
+      .nav { min-height: 66px; }
+      .wordmark { font-size: 22px; gap: 8px; }
+      .brand-icon { width: 29px; height: 29px; }
+    }
+  </style>
+  <style>
+    .legal { max-width: 720px; margin: 0 auto; padding: 56px 0 88px; }
+    .legal h1 { font-size: 2rem; margin: 0 0 28px; letter-spacing: -.02em; }
+    .legal h2 { font-size: 1.1rem; margin: 40px 0 12px; letter-spacing: -.01em; }
+    .legal p, .legal li { color: var(--muted); line-height: 1.7; }
+    .legal p { margin: 0 0 16px; }
+    .legal ul { margin: 0 0 16px; padding-left: 20px; }
+    .legal li { margin: 0 0 8px; }
+    .legal strong { color: var(--ink); font-weight: 600; }
+    .legal code { font-family: var(--mono); font-size: .9em; }
+    .legal pre { background: var(--panel-deep); border: 1px solid var(--line);
+      border-radius: 10px; padding: 14px 16px; overflow-x: auto; margin: 0 0 16px; }
+    .legal pre code { color: var(--muted); }
+    @media (max-width: 640px) { .legal { padding: 32px 16px 64px; } }
+  </style>
+</head>
+<body>
+  <svg class="svg-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="brand" viewBox="0 0 32 32">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10 11C5 11 3 8 3 4M22 11c5 0 7-3 7-7M9 11l2 13 5 4 5-4 2-13-7-4z"/>
+        <path d="M12 16h1m6 0h1m-7 6h6"/>
+      </g>
+    </symbol>
+  </svg>
+
+  <header class="site-header">
+    <nav class="nav container" aria-label="Main">
+      <a class="wordmark" href="./">
+        <svg class="brand-icon" aria-hidden="true"><use href="#brand"/></svg>
+        oxpull
+      </a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="container">
+      <article class="legal">
+      <h1>Privacy</h1>
+      <p>Last updated 2026-08-20.</p>
+      <p>This page says exactly what we hold about you and your company. It is short because the list is short.</p>
+      <h2>What the software sends us: nothing</h2>
+      <p>Oxpull Pro makes no network call to us. Not at import, not at startup, not on a schedule. There is no licence check, no telemetry and no phone-home. Your task payloads, arguments, results, database contents and queue traffic never leave your infrastructure, and we could not read them if we wanted to.</p>
+      <p>The package installs as readable Python and the free core is public, so this is checkable rather than asserted.</p>
+      <p>Everything below is about the two places we do hold data: the record we create when you buy, and the log our package index writes when you install.</p>
+      <h2>What we hold when you buy</h2>
+      <p>For each licence:</p>
+      <ul><li>Your company name.</li><li>One contact email address.</li><li>The order and subscription identifiers from our payment processor.</li><li>The username of your index credential.</li><li>A salted scrypt hash of your credential password.</li><li>Timestamps: when the credential was issued, when it expires, and if it was revoked, when and why.</li><li>A free-text note field we use for operational context, such as &quot;renewed&quot; or &quot;rotated after a leak report&quot;.</li></ul>
+      <p>We never hold your password. It exists only as a salted hash, which is why a lost password is rotated rather than recovered.</p>
+      <p>Some purchases go through our payment processor, acting as merchant of record. For those purchases, we do not receive card numbers or expiry dates.</p>
+      <p>For order-form purchases, we invoice directly and hold the billing details needed for invoicing.</p>
+      <h2>The index access log</h2>
+      <p>Our package index writes a log row for every single install request. Each row holds:</p>
+      <ul><li>The time of the request.</li><li>The credential username, which maps one-to-one to your company.</li><li>The package file requested, so the package name and version.</li><li>The HTTP status we returned.</li><li><strong>Your IP address.</strong></li><li><strong>The installer&#x27;s user-agent string.</strong></li></ul>
+      <p>That last one is more than a browser string, so here is what it actually contains. pip sends a JSON blob. This is a real one, from our own test install:</p>
+      <pre><code>{&quot;ci&quot;:null,&quot;cpu&quot;:&quot;arm64&quot;,&quot;distro&quot;:{&quot;name&quot;:&quot;macOS&quot;,&quot;version&quot;:&quot;26.5.2&quot;},
+ &quot;implementation&quot;:{&quot;name&quot;:&quot;CPython&quot;,&quot;version&quot;:&quot;3.12.13&quot;},
+ &quot;installer&quot;:{&quot;name&quot;:&quot;pip&quot;,&quot;version&quot;:&quot;26.0&quot;},
+ &quot;openssl_version&quot;:&quot;OpenSSL 3.6.3 9 Jun 2026&quot;,&quot;python&quot;:&quot;3.12.13&quot;,
+ &quot;rustc_version&quot;:&quot;1.96.1&quot;,&quot;system&quot;:{&quot;name&quot;:&quot;Darwin&quot;,&quot;release&quot;:&quot;25.5.0&quot;}}</code></pre>
+      <p>So for every install request, tied to your company and alongside your IP address, we record your operating system and its version, your CPU architecture, your Python version, your OpenSSL version, your rustc version, whether the install ran in CI, and which installer and version you used. pip sends this by default to every index it talks to, including PyPI. We are telling you because we receive it, not because we asked for it.</p>
+      <h2>Why we keep it, and what it is not for</h2>
+      <p>One reason: tracing a leaked credential. If a username and password turn up somewhere public, the log tells us which company they belong to, so we rotate one credential instead of forcing a rotation on everyone.</p>
+      <p>It is not used for analytics, profiling, resale, advertising, usage-based pricing, or checking up on how much you use the product. We do not build a usage profile from it, and there is no product surface anywhere that reads it.</p>
+      <h2>Who can reach it</h2>
+      <p>The log lives in one database on one server, in a directory only the index&#x27;s own system account can read. Reaching it means administrative access to that server, which today is held by the operator alone. There is no dashboard, no third-party analytics tool and no export.</p>
+      <h2>How long we keep it</h2>
+      <p>We keep the IP address and the installer string for 90 days, then delete them. Ninety days is long enough to investigate a credential leak, which is the only thing we collect them for.</p>
+      <p>The rest of the row, the time, the package file and the status, has nothing personal in it, and we keep it as operational history.</p>
+      <p>The licence record itself, in the section above, we keep for as long as you are a customer and afterwards for our own accounting.</p>
+      <h2>Who else touches your data</h2>
+      <ul><li><strong>The payment processor</strong>, for merchant-of-record purchases: checkout, payment, invoicing and tax. It holds your billing details under its own terms. For order-form purchases, we invoice directly.</li><li><strong>The company hosting the private index</strong>, which runs the server the index and its log sit on.</li><li><strong>GitHub Pages</strong>, which serves the public website and sees ordinary web request logs that we never see.</li><li><strong>The form provider behind the waitlist form on the website</strong>, which receives the email address you type into it.</li></ul>
+      <h2>The waitlist</h2>
+      <p>If you gave us an email address on the website, it is used for one thing: telling you when something ships. Reply with &quot;remove&quot;, or write to support@oxpull.com, and it is deleted.</p>
+      <h2>Cookies</h2>
+      <p>The website sets none. The package index sets none. There is no analytics script, no tracker and no tag on either.</p>
+      <h2>Your data, and asking us about it</h2>
+      <p>Write to support@oxpull.com and we will tell you what we hold about your company, correct it, or delete it.</p>
+      <h2>Changes</h2>
+      <p>If this page changes, the date at the top changes with it.</p>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <a class="wordmark" href="./">
+        <svg class="brand-icon" aria-hidden="true"><use href="#brand"/></svg>
+        oxpull
+      </a>
+      <p class="footer-bottom">No analytics, no trackers, no cookies on this page.</p>
+    </div>
+  </footer>
+</body>
+</html>
