@@ -409,9 +409,8 @@
     .w-924 { width: 92.36%; }
     .w-803 { width: 80.32%; }
     .chart-scale { display: flex; justify-content: space-between; margin: 17px 53px 0 0; padding-top: 8px; border-top: 1px solid var(--line); color: var(--subtle); font: 9px/1.5 var(--mono); }
-    .evidence-footnote { display: flex; align-items: flex-start; justify-content: space-between; gap: 30px; margin-top: 22px; }
-    .evidence-footnote p { max-width: 670px; color: var(--subtle); font-size: 11px; }
-    .evidence-footnote a { flex: 0 0 auto; }
+    .panel-source { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; margin: 0; padding: 0 26px 23px; }
+    .panel-source p { margin: 0; color: var(--subtle); font-size: 11px; }
 
     /* ===== Pricing ===== */
     .pricing-heading { text-align: center; margin-bottom: 44px; }
@@ -555,7 +554,6 @@
       .comparison th:first-child { width: 50%; }
       .chart { padding-bottom: 25px; }
       .bar-group + .bar-group { margin-top: 24px; }
-      .evidence-footnote { flex-direction: column; gap: 14px; }
       .pricing-card { padding: 26px; }
       .price { align-items: flex-start; flex-direction: column; gap: 5px; }
       .plan-topline { align-items: flex-start; flex-direction: column; gap: 10px; }
@@ -622,6 +620,7 @@
       .comparison th:first-child { width: 43%; }
       .comparison thead th { font-size: 9px; }
       .panel-note { padding-inline: 20px; font-size: 9px; }
+      .panel-source { padding-inline: 20px; }
       .chart-legend { margin-inline: 20px; font-size: 9px; gap: 12px; }
       .chart { padding-inline: 20px; }
       .bar-group-heading { font-size: 9px; }
@@ -901,22 +900,22 @@
             </div>
             <div class="comparison-scroll">
               <table class="comparison">
-                <caption class="sr-only">django-ox 1.3.0 and django-tasks-db 0.13.0</caption>
+                <caption class="sr-only">django-ox 1.5.0 vs django-tasks-db 0.13.0</caption>
                 <thead>
                   <tr>
                     <th scope="col">Capability</th>
-                    <th scope="col" class="our-column">django-ox<span class="table-subtitle">1.3.0</span></th>
+                    <th scope="col" class="our-column">django-ox<span class="table-subtitle">1.5.0</span></th>
                     <th scope="col">django-tasks-db<span class="table-subtitle">0.13.0</span></th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <th scope="row">Retries</th>
+                    <th scope="row">Automatic retries</th>
                     <td class="our-column"><span class="status yes"><svg class="icon" aria-hidden="true"><use href="#check"/></svg><span class="sr-only">Included</span></span></td>
                     <td><span class="status no"><svg class="icon" aria-hidden="true"><use href="#cross"/></svg><span class="sr-only">Not included</span></span></td>
                   </tr>
                   <tr>
-                    <th scope="row">Dead worker’s task returns</th>
+                    <th scope="row">Dead worker task recovery</th>
                     <td class="our-column"><span class="status yes"><svg class="icon" aria-hidden="true"><use href="#check"/></svg><span class="sr-only">Included</span></span></td>
                     <td><span class="status no"><svg class="icon" aria-hidden="true"><use href="#cross"/></svg><span class="sr-only">Not included</span></span></td>
                   </tr>
@@ -926,12 +925,27 @@
                     <td><span class="status no"><svg class="icon" aria-hidden="true"><use href="#cross"/></svg><span class="sr-only">Not included</span></span></td>
                   </tr>
                   <tr>
-                    <th scope="row">Health command</th>
+                    <th scope="row">Worker heartbeat checks</th>
                     <td class="our-column"><span class="status yes"><svg class="icon" aria-hidden="true"><use href="#check"/></svg><span class="sr-only">Included</span></span></td>
                     <td><span class="status no"><svg class="icon" aria-hidden="true"><use href="#cross"/></svg><span class="sr-only">Not included</span></span></td>
                   </tr>
                   <tr>
                     <th scope="row">Bulk enqueue</th>
+                    <td class="our-column"><span class="status yes"><svg class="icon" aria-hidden="true"><use href="#check"/></svg><span class="sr-only">Included</span></span></td>
+                    <td><span class="status no"><svg class="icon" aria-hidden="true"><use href="#cross"/></svg><span class="sr-only">Not included</span></span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Task attempt timeouts</th>
+                    <td class="our-column"><span class="status yes"><svg class="icon" aria-hidden="true"><use href="#check"/></svg><span class="sr-only">Included</span></span></td>
+                    <td><span class="status no"><svg class="icon" aria-hidden="true"><use href="#cross"/></svg><span class="sr-only">Not included</span></span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Admin queue overview</th>
+                    <td class="our-column"><span class="status yes"><svg class="icon" aria-hidden="true"><use href="#check"/></svg><span class="sr-only">Included</span></span></td>
+                    <td><span class="status no"><svg class="icon" aria-hidden="true"><use href="#cross"/></svg><span class="sr-only">Not included</span></span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">In-process task concurrency</th>
                     <td class="our-column"><span class="status yes"><svg class="icon" aria-hidden="true"><use href="#check"/></svg><span class="sr-only">Included</span></span></td>
                     <td><span class="status no"><svg class="icon" aria-hidden="true"><use href="#cross"/></svg><span class="sr-only">Not included</span></span></td>
                   </tr>
@@ -1018,16 +1032,16 @@
               <div class="chart-scale" aria-hidden="true"><span>0</span><span>250</span><span>500 tasks/s</span></div>
             </div>
             <p class="panel-note">All bars use a 0–500 tasks/s scale.</p>
+            <div class="panel-source">
+              <p>Benchmark: django-ox 1.3.0 vs django-tasks-db 0.13.0 on PostgreSQL 16, five runs per cell.</p>
+              <a class="text-link" href="https://oxpull.com/django-ox/benchmarks/">
+                Methodology and results
+                <svg class="icon" aria-hidden="true"><use href="#arrow-up-right"/></svg>
+              </a>
+            </div>
           </article>
         </div>
 
-        <div class="evidence-footnote">
-          <p>django-ox 1.3.0 vs django-tasks-db 0.13.0 on PostgreSQL 16. Five runs per cell. Results apply to these workloads, not every application.</p>
-          <a class="text-link" href="https://oxpull.com/django-ox/benchmarks/">
-            Methodology and results
-            <svg class="icon" aria-hidden="true"><use href="#arrow-up-right"/></svg>
-          </a>
-        </div>
       </div>
     </section>
 
