@@ -650,7 +650,101 @@
       .button-primary:hover { transform: none; }
     }
     .ext { display: inline-block; margin-left: 0.25em; vertical-align: -1px; opacity: 0.7; }
-</style>
+
+    .release {
+      max-width: 100%;
+      flex-wrap: wrap;
+    }
+
+    .release-version {
+      white-space: nowrap;
+    }
+
+    .release-update {
+      padding-block: 56px;
+      scroll-margin-top: 96px;
+    }
+
+    .release-update .feature-card {
+      display: block;
+      min-width: 0;
+    }
+
+    .release-update .feature-body {
+      height: 100%;
+    }
+
+    .release-update .feature-body p {
+      overflow-wrap: anywhere;
+    }
+
+    .release-progress {
+      margin-top: 24px;
+      padding: 24px;
+    }
+
+    .release-progress h3 {
+      margin: 0 0 12px;
+    }
+
+    .release-progress p {
+      margin: 8px 0 0;
+      color: var(--muted);
+    }
+
+    .release-progress strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .release-progress .release-recognition {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      font-size: 13px;
+    }
+
+    .release-actions {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px 24px;
+      margin-top: 24px;
+    }
+
+    .release:focus-visible,
+    .release-actions a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+    }
+
+    @media (max-width: 850px) {
+      .release-update .feature-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .release-update {
+        padding-block: 40px;
+      }
+
+      .release-progress {
+        padding: 20px;
+      }
+
+      .release-actions {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .release-actions .button {
+        width: 100%;
+        white-space: normal;
+        text-align: center;
+      }
+    }
+  </style>
 </head>
 
 <body>
@@ -722,6 +816,11 @@
     <section class="hero" aria-labelledby="hero-title">
       <div class="container hero-grid">
         <div class="hero-copy">
+          <a class="release" href="#release-180">
+            <span class="release-version">django-ox 1.8.0</span>
+            <span>What’s new</span>
+            <svg class="icon" aria-hidden="true"><use href="#arrow-right"/></svg>
+          </a>
           <h1 id="hero-title">Django tasks in your <span>database</span></h1>
           <p class="hero-description">Stop running Redis to send an email. Queue work in your existing database, where a dead worker doesn't mean lost tasks.</p>
           <div class="hero-actions">
@@ -798,6 +897,59 @@
           <p class="metric-number"><span class="highlight">0.71</span> s</p>
           <p class="metric-label">To enqueue 10,000 tasks</p>
         </div>
+      </div>
+    </section>
+
+    <section class="section container release-update" id="release-180" aria-labelledby="release-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">New in django-ox 1.8.0</p>
+          <h2 id="release-title">Manage recurring work in your Django database.</h2>
+        </div>
+        <p>Released <time datetime="2026-10-04">2026-10-04</time>. All three improvements are in the free package.</p>
+      </div>
+
+      <div class="feature-grid">
+        <article class="feature-card">
+          <div class="feature-body">
+            <h3>Move schedules from django-celery-beat</h3>
+            <p>The rebuilt importer reads django-celery-beat’s database scheduler tables using Celery’s crontab grammar and prints one all-or-nothing schedule-creation call. Each row requiring attention gets a named reason.</p>
+          </div>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-body">
+            <h3>Create many schedules in one call</h3>
+            <p>Create many stored schedules in one all-or-nothing call with <code>create_schedules</code>. Add them through a public, stable API, then manage them in the Django admin.</p>
+          </div>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-body">
+            <h3>Bad schedule rows are isolated</h3>
+            <p>An invalid stored schedule is skipped and logged. Other schedules and queued tasks keep running.</p>
+          </div>
+        </article>
+      </div>
+
+      <div class="data-panel release-progress">
+        <h3>A stable public API since 1.0.0.</h3>
+        <p><strong>18 releases in 49 days.</strong> Public API stable since 1.0.0 (September 2026).</p>
+        <p><strong>All 36 checks passed on release PR #124.</strong> CI included test-suite legs on PostgreSQL, MySQL and SQLite, plus Wagtail smoke checks.</p>
+        <p><strong>3,761 test cases in the 1.8.0 suite.</strong></p>
+        <p><strong>22 merged pull requests from 13 outside contributors.</strong></p>
+        <p class="release-recognition">Featured in PyCoder’s Weekly #752 (<time datetime="2026-09-15">2026-09-15</time>). Listed in awesome-django under Task Queues.</p>
+      </div>
+
+      <div class="release-actions">
+        <a class="button button-secondary" href="https://oxpull.com/django-ox/changelog/">
+          Read the 1.8.0 changelog
+          <svg class="icon" aria-hidden="true"><use href="#arrow-right"/></svg>
+        </a>
+        <a class="text-link" href="https://github.com/oxpull/django-ox/releases/tag/v1.8.0" target="_blank" rel="noopener">
+          GitHub release notes
+          <svg class="icon ext" aria-hidden="true"><use href="#arrow-up-right"/></svg>
+        </a>
       </div>
     </section>
 
@@ -900,11 +1052,11 @@
             </div>
             <div class="comparison-scroll">
               <table class="comparison">
-                <caption class="sr-only">django-ox 1.5.0 vs django-tasks-db 0.13.0</caption>
+                <caption class="sr-only">django-ox 1.8.0 vs django-tasks-db 0.13.0</caption>
                 <thead>
                   <tr>
                     <th scope="col">Capability</th>
-                    <th scope="col" class="our-column">django-ox<span class="table-subtitle">1.5.0</span></th>
+                    <th scope="col" class="our-column">django-ox<span class="table-subtitle">1.8.0</span></th>
                     <th scope="col">django-tasks-db<span class="table-subtitle">0.13.0</span></th>
                   </tr>
                 </thead>
