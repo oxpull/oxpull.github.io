@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Privacy. Oxpull</title>
-  <meta name="description" content="What Oxpull holds, why, and for how long.">
+  <title>Site privacy · Oxpull</title>
+  <meta name="description" content="Privacy on oxpull.com: no cookies, analytics or trackers. Hosted by GitHub Pages.">
   <style>
     :root {
       color-scheme: dark;
@@ -209,48 +209,21 @@
   <main>
     <div class="container">
       <article class="legal">
-      <h1>Privacy</h1>
-      <p>Last updated 2026-09-26.</p>
-      <p>This page says exactly what we hold about you and your company. It is short because the list is short.</p>
-      <h2>What the software sends us: nothing</h2>
-      <p>Oxpull Pro makes no network call to us. Not at import, not at startup, not on a schedule. There is no licence check, no telemetry and no phone-home. Your task payloads, arguments, results, database contents and queue traffic never leave your infrastructure, and we could not read them if we wanted to.</p>
-      <p>The package installs as readable Python and the free core is public, so this is checkable rather than asserted.</p>
-      <p>Everything below is about the two places we do hold data: the record we create when you buy, and the log our package index writes when you install.</p>
-      <h2>What we hold when you buy</h2>
-      <p>For each licence:</p>
-      <ul><li>Your company name.</li><li>One contact email address.</li><li>The order and subscription identifiers from our payment processor.</li><li>The username of your index credential.</li><li>A salted scrypt hash of your credential password.</li><li>Timestamps: when the credential was issued, when it expires, and if it was revoked, when and why.</li><li>A free-text note field we use for operational context, such as &quot;renewed&quot; or &quot;rotated after a leak report&quot;.</li></ul>
-      <p>We never hold your password. It exists only as a salted hash, which is why a lost password is rotated rather than recovered.</p>
-      <p>Some purchases go through our payment processor, acting as merchant of record. For those purchases, we do not receive card numbers or expiry dates.</p>
-      <p>For order-form purchases, we invoice directly and hold the billing details needed for invoicing.</p>
-      <h2>The index access log</h2>
-      <p>Our package index writes a log row for every single install request. Each row holds:</p>
-      <ul><li>The time of the request.</li><li>The credential username, which maps one-to-one to your company.</li><li>The package file requested, so the package name and version.</li><li>The HTTP status we returned.</li><li><strong>Your IP address.</strong></li><li><strong>The installer&#x27;s user-agent string.</strong></li></ul>
-      <p>That last one is more than a browser string, so here is what it actually contains. pip sends a JSON blob. This is a real one, from our own test install:</p>
-      <pre><code>{&quot;ci&quot;:null,&quot;cpu&quot;:&quot;arm64&quot;,&quot;distro&quot;:{&quot;name&quot;:&quot;macOS&quot;,&quot;version&quot;:&quot;26.5.2&quot;},
- &quot;implementation&quot;:{&quot;name&quot;:&quot;CPython&quot;,&quot;version&quot;:&quot;3.12.13&quot;},
- &quot;installer&quot;:{&quot;name&quot;:&quot;pip&quot;,&quot;version&quot;:&quot;26.0&quot;},
- &quot;openssl_version&quot;:&quot;OpenSSL 3.6.3 9 Jun 2026&quot;,&quot;python&quot;:&quot;3.12.13&quot;,
- &quot;rustc_version&quot;:&quot;1.96.1&quot;,&quot;system&quot;:{&quot;name&quot;:&quot;Darwin&quot;,&quot;release&quot;:&quot;25.5.0&quot;}}</code></pre>
-      <p>So for every install request, tied to your company and alongside your IP address, we record your operating system and its version, your CPU architecture, your Python version, your OpenSSL version, your rustc version, whether the install ran in CI, and which installer and version you used. pip sends this by default to every index it talks to, including PyPI. We are telling you because we receive it, not because we asked for it.</p>
-      <h2>Why we keep it, and what it is not for</h2>
-      <p>One reason: tracing a leaked credential. If a username and password turn up somewhere public, the log tells us which company they belong to, so we rotate one credential instead of forcing a rotation on everyone.</p>
-      <p>It is not used for analytics, profiling, resale, advertising, usage-based pricing, or checking up on how much you use the product. We do not build a usage profile from it, and there is no product surface anywhere that reads it.</p>
-      <h2>Who can reach it</h2>
-      <p>The log lives in one database on one server, in a directory only the index&#x27;s own system account can read. Reaching it means administrative access to that server, which today is held by the operator alone. There is no dashboard, no third-party analytics tool and no export.</p>
-      <h2>How long we keep it</h2>
-      <p>We keep the IP address and the installer string for 90 days, then delete them. Ninety days is long enough to investigate a credential leak, which is the only thing we collect them for.</p>
-      <p>The rest of the row, the time, the package file and the status, has nothing personal in it, and we keep it as operational history.</p>
-      <p>The licence record itself, in the section above, we keep for as long as you are a customer and afterwards for our own accounting.</p>
-      <h2>Who else touches your data</h2>
-      <ul><li><strong>The payment processor</strong>, for merchant-of-record purchases: checkout, payment, invoicing and tax. It holds your billing details under its own terms. For order-form purchases, we invoice directly.</li><li><strong>The company hosting the private index</strong>, which runs the server the index and its log sit on.</li><li><strong>GitHub Pages</strong>, which serves the public website and sees ordinary web request logs that we never see.</li><li><strong>The form provider (Formspree)</strong>, which receives the details you enter in the order form.</li></ul>
-      <h2>The waitlist</h2>
-      <p>If you gave us an email address on the website, it is used for one thing: telling you when something ships. Reply with &quot;remove&quot;, or write to support@oxpull.com, and it is deleted.</p>
-      <h2>Cookies</h2>
-      <p>The website sets none. The package index sets none. There is no analytics script, no tracker and no tag on either.</p>
-      <h2>Your data, and asking us about it</h2>
-      <p>If you want your data removed, write to support@oxpull.com and we will process the request.</p>
-      <h2>Changes</h2>
-      <p>If this page changes, the date at the top changes with it.</p>
+      <h1>Site privacy</h1>
+
+      <p>This notice covers the oxpull.com website.</p>
+
+
+      <h2>Cookies and analytics</h2>
+      <p>The website sets no cookies. It has no analytics scripts, trackers or tags.</p>
+
+      <h2>Hosting</h2>
+      <p>GitHub Pages hosts the website. GitHub sees ordinary web request logs. The project maintainers do not see those logs. GitHub's handling of that information is covered by the <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub Privacy Statement</a>.</p>
+
+      <h2>Forms</h2>
+      <p>The website has no forms.</p>
+
+      <p><a href="./">Back to Oxpull</a></p>
       </article>
     </div>
   </main>
