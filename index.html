@@ -414,14 +414,10 @@
     .bar.baseline { background: var(--subtle); opacity: .55; }
     .bar-value { text-align: right; color: var(--accent); font: 10px/1 var(--mono); font-variant-numeric: tabular-nums; }
     .bar-row.baseline .bar-value { color: var(--muted); }
-    .w-237 { width: 23.70%; }
-    .w-208 { width: 20.78%; }
-    .w-853 { width: 85.26%; }
-    .w-774 { width: 77.42%; }
-    .w-230 { width: 23.04%; }
-    .w-195 { width: 19.48%; }
-    .w-924 { width: 92.36%; }
-    .w-803 { width: 80.32%; }
+    .w-3358 { width: 83.95%; }
+    .w-1989 { width: 49.73%; }
+    .w-3289 { width: 82.23%; }
+    .w-1952 { width: 48.80%; }
     .chart-scale { display: flex; justify-content: space-between; margin: 17px 53px 0 0; padding-top: 8px; border-top: 1px solid var(--line); color: var(--subtle); font: 9px/1.5 var(--mono); }
     .panel-source { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; margin: 0; padding: 0 26px 23px; }
     .panel-source p { margin: 0; color: var(--subtle); font-size: 11px; }
@@ -814,15 +810,15 @@
       <div class="proof-grid">
         <div class="metric">
           <p class="metric-number">2,000 <small>of</small> <span class="highlight">2,000</span></p>
-          <p class="metric-label">Tasks finished after 20 worker kills per trial</p>
+          <p class="metric-label">Tasks finished after 20 worker kills per trial (django-ox 1.3.0)</p>
         </div>
         <div class="metric">
-          <p class="metric-number"><small>up to</small> <span class="highlight">20%</span> <small>faster</small></p>
-          <p class="metric-label">Queue drain than django-tasks-db</p>
+          <p class="metric-number"><small>up to</small> <span class="highlight">1.7</span>×</p>
+          <p class="metric-label">The throughput of django-tasks-db, 100,000 tasks, 16 workers, same connection settings</p>
         </div>
         <div class="metric">
           <p class="metric-number"><span class="highlight">0.71</span> s</p>
-          <p class="metric-label">To enqueue 10,000 tasks</p>
+          <p class="metric-label">To enqueue 10,000 tasks (django-ox 1.3.0)</p>
         </div>
       </div>
     </section>
@@ -869,9 +865,8 @@
 
       <div class="data-panel release-progress">
         <h3>A stable core public API since 1.0.0.</h3>
-        <p><strong>19 releases.</strong> Core public API stable since 1.0.0 (September 2026). The workflow API is provisional.</p>
-        <p><strong>6,899 test cases in the 1.9.0 suite.</strong></p>
-        <p><strong>22 merged pull requests from 13 outside contributors.</strong></p>
+        <p><strong>20 releases.</strong> Core public API stable since 1.0.0 (September 2026). The workflow API is provisional.</p>
+        <p><strong>6,936 test cases in the 1.9.1 suite.</strong></p>
         <p class="release-recognition">Featured in PyCoder's Weekly #752 (<time datetime="2026-09-15">2026-09-15</time>). Listed in awesome-django under Task Queues.</p>
       </div>
 
@@ -982,8 +977,8 @@
           <!-- DRAIN BENCHMARK COMPONENT -->
           <article class="data-panel" aria-labelledby="drain-title">
             <div class="panel-heading">
-              <h3 id="drain-title">Up to 20% faster queue drain than django-tasks-db</h3>
-              <p>Tasks per second. Higher is better.</p>
+              <h3 id="drain-title">100,000 tasks: about 30 seconds for django-ox, about 50 for django-tasks-db</h3>
+              <p>With 16 workers and persistent connections, django-ox drained 100,000 tasks in about 30 seconds. django-tasks-db took about 50 seconds. Tasks per second, higher is better.</p>
             </div>
             <div class="chart-legend" aria-hidden="true">
               <span class="legend-item"><span class="legend-swatch"></span>django-ox</span>
@@ -991,74 +986,42 @@
             </div>
             <div class="chart">
               <div class="bar-group">
-                <h4 class="bar-group-heading"><strong>2,000 tasks, 1 worker</strong></h4>
+                <h4 class="bar-group-heading"><strong>Persistent connections (CONN_MAX_AGE = 600)</strong></h4>
                 <div class="bar-pair">
                   <div class="bar-row">
                     <span class="sr-only">django-ox: </span>
-                    <div class="bar-track" aria-hidden="true"><div class="bar w-237"></div></div>
-                    <span class="bar-value">118.5<span class="sr-only"> tasks per second</span></span>
+                    <div class="bar-track" aria-hidden="true"><div class="bar w-3358"></div></div>
+                    <span class="bar-value">3,358<span class="sr-only"> tasks per second</span></span>
                   </div>
                   <div class="bar-row baseline">
                     <span class="sr-only">django-tasks-db: </span>
-                    <div class="bar-track" aria-hidden="true"><div class="bar baseline w-208"></div></div>
-                    <span class="bar-value">103.9<span class="sr-only"> tasks per second</span></span>
+                    <div class="bar-track" aria-hidden="true"><div class="bar baseline w-1989"></div></div>
+                    <span class="bar-value">1,989<span class="sr-only"> tasks per second</span></span>
                   </div>
                 </div>
               </div>
 
               <div class="bar-group">
-                <h4 class="bar-group-heading"><strong>2,000 tasks, 4 workers</strong></h4>
+                <h4 class="bar-group-heading"><strong>Connection pool (OPTIONS[&quot;pool&quot;], CONN_MAX_AGE = 0)</strong></h4>
                 <div class="bar-pair">
                   <div class="bar-row">
                     <span class="sr-only">django-ox: </span>
-                    <div class="bar-track" aria-hidden="true"><div class="bar w-853"></div></div>
-                    <span class="bar-value">426.3<span class="sr-only"> tasks per second</span></span>
+                    <div class="bar-track" aria-hidden="true"><div class="bar w-3289"></div></div>
+                    <span class="bar-value">3,289<span class="sr-only"> tasks per second</span></span>
                   </div>
                   <div class="bar-row baseline">
                     <span class="sr-only">django-tasks-db: </span>
-                    <div class="bar-track" aria-hidden="true"><div class="bar baseline w-774"></div></div>
-                    <span class="bar-value">387.1<span class="sr-only"> tasks per second</span></span>
+                    <div class="bar-track" aria-hidden="true"><div class="bar baseline w-1952"></div></div>
+                    <span class="bar-value">1,952<span class="sr-only"> tasks per second</span></span>
                   </div>
                 </div>
               </div>
 
-              <div class="bar-group">
-                <h4 class="bar-group-heading"><strong>20,000 tasks, 1 worker</strong></h4>
-                <div class="bar-pair">
-                  <div class="bar-row">
-                    <span class="sr-only">django-ox: </span>
-                    <div class="bar-track" aria-hidden="true"><div class="bar w-230"></div></div>
-                    <span class="bar-value">115.2<span class="sr-only"> tasks per second</span></span>
-                  </div>
-                  <div class="bar-row baseline">
-                    <span class="sr-only">django-tasks-db: </span>
-                    <div class="bar-track" aria-hidden="true"><div class="bar baseline w-195"></div></div>
-                    <span class="bar-value">97.4<span class="sr-only"> tasks per second</span></span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="bar-group">
-                <h4 class="bar-group-heading"><strong>20,000 tasks, 4 workers</strong></h4>
-                <div class="bar-pair">
-                  <div class="bar-row">
-                    <span class="sr-only">django-ox: </span>
-                    <div class="bar-track" aria-hidden="true"><div class="bar w-924"></div></div>
-                    <span class="bar-value">461.8<span class="sr-only"> tasks per second</span></span>
-                  </div>
-                  <div class="bar-row baseline">
-                    <span class="sr-only">django-tasks-db: </span>
-                    <div class="bar-track" aria-hidden="true"><div class="bar baseline w-803"></div></div>
-                    <span class="bar-value">401.6<span class="sr-only"> tasks per second</span></span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="chart-scale" aria-hidden="true"><span>0</span><span>250</span><span>500 tasks/s</span></div>
+              <div class="chart-scale" aria-hidden="true"><span>0</span><span>2,000</span><span>4,000 tasks/s</span></div>
             </div>
-            <p class="panel-note">All bars use a 0–500 tasks/s scale.</p>
+            <p class="panel-note">Both bars use a 0 to 4,000 tasks/s scale. Matched settings, health checks off, 16 workers.</p>
             <div class="panel-source">
-              <p>Benchmark: django-ox 1.3.0 vs django-tasks-db 0.13.0 on PostgreSQL 16, five runs per cell.</p>
+              <p>PostgreSQL 16; no-op tasks; django-ox 1.9.0 vs django-tasks-db 0.13.0; medians of five runs.</p>
               <a class="text-link" href="https://oxpull.com/django-ox/benchmarks/">
                 Methodology and results
                 <svg class="icon" aria-hidden="true"><use href="#arrow-up-right"/></svg>
@@ -1160,7 +1123,7 @@
           <details>
             <summary>What should I install?</summary>
             <p>For a new installation, run <code>pip install django-ox</code>. Follow the <a href="https://oxpull.com/django-ox/background-tasks/">getting started guide</a> to configure Django and run a worker.</p>
-            <p>The <code>oxpull</code> 1.9.0 package on PyPI is a metapackage. It depends on <code>django-ox&gt;=1.9.0</code> and contains no Python module. django-ox supplies the <code>oxpull</code> module.</p>
+            <p>The <code>oxpull</code> 1.9.1 package on PyPI is a metapackage. It depends on <code>django-ox&gt;=1.9.1</code> and contains no Python module. django-ox supplies the <code>oxpull</code> module.</p>
           </details>
 
           <details>
