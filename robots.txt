@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://oxpull.com/sitemap.xml
+Sitemap: https://oxpull.com/django-ox/sitemap.xml

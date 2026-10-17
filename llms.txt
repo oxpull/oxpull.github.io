@@ -1,0 +1,25 @@
+# Oxpull
+
+> Oxpull publishes django-ox, a free, open-source (BSD 3-Clause) worker for Django's Tasks framework. The task queue lives in your existing PostgreSQL, MySQL or SQLite database, so there is no broker to run. Current release: django-ox 1.9.1 (2026-10-17).
+
+Execution is at-least-once. A worker holds a lease on each task it runs; if the worker dies, the lease expires and another worker finishes the task. Enqueue inside `transaction.atomic()` and the task commits or rolls back with your data.
+
+With pooled or persistent connections, django-ox ran 1.4 to 1.7 times the throughput of django-tasks-db 0.13.0 in our benchmark (PostgreSQL 16, no-op tasks, medians of five runs).
+
+## Start here
+
+- [Documentation for AI assistants](https://oxpull.com/django-ox/llms.txt): facts and links, kept current with each release.
+- [Full documentation in one file](https://oxpull.com/django-ox/llms-full.txt)
+- [Benchmarks](https://oxpull.com/django-ox/benchmarks/): methods, settings and every measured cell.
+- [Background tasks, step by step](https://oxpull.com/django-ox/background-tasks/): install, enqueue, run a worker.
+
+## Blog
+
+- [Your customer paid. Then the worker died.](https://oxpull.com/blog/your-customer-paid-then-the-worker-died/): what a dead background worker costs a Django business, and how leases recover the task.
+- [Your workers open a new Postgres connection for every task](https://oxpull.com/blog/your-workers-open-a-new-postgres-connection-for-every-task/): connection settings and the matched django-ox and django-tasks-db results.
+
+## Optional
+
+- [Source code](https://github.com/oxpull/django-ox)
+- [PyPI](https://pypi.org/project/django-ox/)
+- [Context7](https://context7.com/oxpull/django-ox): library id /oxpull/django-ox
