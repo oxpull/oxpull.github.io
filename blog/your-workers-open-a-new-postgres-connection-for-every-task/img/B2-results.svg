@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 548" role="img" aria-labelledby="t d" style="width:100%;height:auto;max-width:960px">
+<title id="t">Throughput of django-ox and django-tasks-db at matched settings</title><desc id="d">Eight pairs of bars. django-ox ran 1.41 to 1.69 times the tasks per second of django-tasks-db across 4, 8 and 16 workers and 20,000 or 100,000 tasks, with persistent connections or a pool.</desc>
+<rect width="960" height="548" rx="16" fill="#16201b" stroke="#2a382e"/>
+<text x="40" y="50" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="700" fill="#eef4ee" text-anchor="start">Same settings, more tasks per second</text>
+<text x="40" y="80" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="16" font-weight="400" fill="#a4b4a8" text-anchor="start">Tasks per second, higher is better</text>
+<rect x="40" y="100" width="14" height="14" rx="3" fill="#6fc59a"/><text x="62" y="112" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="16" font-weight="400" fill="#eef4ee" text-anchor="start">django-ox</text><rect x="180" y="100" width="14" height="14" rx="3" fill="#8a9a90"/><text x="202" y="112" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="16" font-weight="400" fill="#eef4ee" text-anchor="start">django-tasks-db</text>
+<rect x="56" y="293.5" width="24" height="126.5" rx="3" fill="#6fc59a"/>
+<rect x="84" y="333.5" width="24" height="86.5" rx="3" fill="#8a9a90"/>
+<text x="82" y="263.5" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="18" font-weight="700" fill="#6fc59a" text-anchor="middle">1.46×</text>
+<text x="82" y="283.5" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="13" font-weight="400" fill="#a4b4a8" text-anchor="middle">1,771</text>
+<text x="82" y="440" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#a4b4a8" text-anchor="middle">persistent</text>
+<rect x="156" y="297.2857142857143" width="24" height="122.71428571428571" rx="3" fill="#6fc59a"/>
+<rect x="184" y="333.14285714285717" width="24" height="86.85714285714285" rx="3" fill="#8a9a90"/>
+<text x="182" y="267.2857142857143" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="18" font-weight="700" fill="#6fc59a" text-anchor="middle">1.41×</text>
+<text x="182" y="287.2857142857143" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="13" font-weight="400" fill="#a4b4a8" text-anchor="middle">1,718</text>
+<text x="182" y="440" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#a4b4a8" text-anchor="middle">pool</text>
+<text x="126.0" y="468" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="15" font-weight="700" fill="#eef4ee" text-anchor="middle">4 workers, 20,000 tasks</text>
+<rect x="276" y="229.42857142857144" width="24" height="190.57142857142856" rx="3" fill="#6fc59a"/>
+<rect x="304" y="296.07142857142856" width="24" height="123.92857142857142" rx="3" fill="#8a9a90"/>
+<text x="302" y="199.42857142857144" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="18" font-weight="700" fill="#6fc59a" text-anchor="middle">1.53×</text>
+<text x="302" y="219.42857142857144" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="13" font-weight="400" fill="#a4b4a8" text-anchor="middle">2,668</text>
+<text x="302" y="440" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#a4b4a8" text-anchor="middle">persistent</text>
+<rect x="376" y="236.5" width="24" height="183.5" rx="3" fill="#6fc59a"/>
+<rect x="404" y="296.8571428571429" width="24" height="123.14285714285714" rx="3" fill="#8a9a90"/>
+<text x="402" y="206.5" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="18" font-weight="700" fill="#6fc59a" text-anchor="middle">1.51×</text>
+<text x="402" y="226.5" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="13" font-weight="400" fill="#a4b4a8" text-anchor="middle">2,569</text>
+<text x="402" y="440" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#a4b4a8" text-anchor="middle">pool</text>
+<text x="346.0" y="468" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="15" font-weight="700" fill="#eef4ee" text-anchor="middle">8 workers, 20,000 tasks</text>
+<rect x="496" y="201.07142857142858" width="24" height="218.92857142857142" rx="3" fill="#6fc59a"/>
+<rect x="524" y="280.07142857142856" width="24" height="139.92857142857142" rx="3" fill="#8a9a90"/>
+<text x="522" y="171.07142857142858" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="18" font-weight="700" fill="#6fc59a" text-anchor="middle">1.54×</text>
+<text x="522" y="191.07142857142858" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="13" font-weight="400" fill="#a4b4a8" text-anchor="middle">3,065</text>
+<text x="522" y="440" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#a4b4a8" text-anchor="middle">persistent</text>
+<rect x="596" y="204.92857142857144" width="24" height="215.07142857142856" rx="3" fill="#6fc59a"/>
+<rect x="624" y="281.57142857142856" width="24" height="138.42857142857142" rx="3" fill="#8a9a90"/>
+<text x="622" y="174.92857142857144" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="18" font-weight="700" fill="#6fc59a" text-anchor="middle">1.55×</text>
+<text x="622" y="194.92857142857144" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="13" font-weight="400" fill="#a4b4a8" text-anchor="middle">3,011</text>
+<text x="622" y="440" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#a4b4a8" text-anchor="middle">pool</text>
+<text x="566.0" y="468" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="15" font-weight="700" fill="#eef4ee" text-anchor="middle">16 workers, 20,000 tasks</text>
+<rect x="716" y="180.14285714285717" width="24" height="239.85714285714283" rx="3" fill="#6fc59a"/>
+<rect x="744" y="277.92857142857144" width="24" height="142.07142857142856" rx="3" fill="#8a9a90"/>
+<text x="742" y="150.14285714285717" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="18" font-weight="700" fill="#6fc59a" text-anchor="middle">1.69×</text>
+<text x="742" y="170.14285714285717" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="13" font-weight="400" fill="#a4b4a8" text-anchor="middle">3,358</text>
+<text x="742" y="440" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#a4b4a8" text-anchor="middle">persistent</text>
+<rect x="816" y="185.07142857142858" width="24" height="234.92857142857142" rx="3" fill="#6fc59a"/>
+<rect x="844" y="280.57142857142856" width="24" height="139.42857142857142" rx="3" fill="#8a9a90"/>
+<text x="842" y="155.07142857142858" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="18" font-weight="700" fill="#6fc59a" text-anchor="middle">1.68×</text>
+<text x="842" y="175.07142857142858" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="13" font-weight="400" fill="#a4b4a8" text-anchor="middle">3,289</text>
+<text x="842" y="440" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#a4b4a8" text-anchor="middle">pool</text>
+<text x="786.0" y="468" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="15" font-weight="700" fill="#eef4ee" text-anchor="middle">16 workers, 100,000 tasks</text>
+<line x1="40" y1="420" x2="920" y2="420" stroke="#2a382e"/>
+<text x="40" y="506" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#a4b4a8" text-anchor="start">Ratio is django-ox over django-tasks-db, median of per-round ratios. The pool setting is CONN_MAX_AGE = 0 with OPTIONS["pool"].</text>
+<text x="40" y="528" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#a4b4a8" text-anchor="start">django-ox 1.9.0 vs django-tasks-db 0.13.0, PostgreSQL 16, no-op tasks, medians of five runs.</text>
+</svg>

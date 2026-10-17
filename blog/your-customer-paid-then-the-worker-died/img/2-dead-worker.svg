@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 450" role="img" aria-labelledby="t d" style="width:100%;height:auto;max-width:960px">
+<title id="t">What happens to a task when its worker dies</title><desc id="d">Without a lease the task stays marked running and nobody retries it. With django-ox the lease expires, a reaper makes the task claimable and another worker finishes it.</desc>
+<rect width="960" height="450" rx="16" fill="#16201b" stroke="#2a382e"/>
+<text x="40" y="50" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="700" fill="#eef4ee" text-anchor="start">When the worker dies</text>
+<text x="40" y="90" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="18" font-weight="700" fill="#e5bc85" text-anchor="start">A task that only the worker knows about</text>
+<rect x="40.0" y="106" width="274.6666666666667" height="84" rx="10" fill="#0d1410" stroke="#2a382e"/>
+<text x="54.0" y="134" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="16" font-weight="700" fill="#eef4ee" text-anchor="start">Worker takes it</text>
+<text x="54.0" y="158" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#a4b4a8" text-anchor="start">Marked running.</text>
+<text x="54.0" y="178" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#a4b4a8" text-anchor="start"></text>
+<path d="M318.6666666666667 148 h20 m-7 -6 l7 6 l-7 6" fill="none" stroke="#a4b4a8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="342.6666666666667" y="106" width="274.6666666666667" height="84" rx="10" fill="#0d1410" stroke="#2a382e"/>
+<text x="356.6666666666667" y="134" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="16" font-weight="700" fill="#eef4ee" text-anchor="start">Worker dies</text>
+<text x="356.6666666666667" y="158" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#a4b4a8" text-anchor="start">Deploy, memory kill,</text>
+<text x="356.6666666666667" y="178" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#a4b4a8" text-anchor="start">crash.</text>
+<path d="M621.3333333333334 148 h20 m-7 -6 l7 6 l-7 6" fill="none" stroke="#a4b4a8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="645.3333333333334" y="106" width="274.6666666666667" height="84" rx="10" fill="#0d1410" stroke="#2a382e"/>
+<text x="659.3333333333334" y="134" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="16" font-weight="700" fill="#eef4ee" text-anchor="start">Nothing comes back</text>
+<text x="659.3333333333334" y="158" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#a4b4a8" text-anchor="start">It stays marked running.</text>
+<text x="659.3333333333334" y="178" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#a4b4a8" text-anchor="start">Nobody retries it.</text>
+<text x="40" y="230" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="18" font-weight="700" fill="#6fc59a" text-anchor="start">A task in your database, held by a lease</text>
+<rect x="40.0" y="246" width="199.0" height="84" rx="10" fill="#0d1410" stroke="#2a382e"/>
+<text x="54.0" y="274" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="16" font-weight="700" fill="#eef4ee" text-anchor="start">Worker takes a lease</text>
+<text x="54.0" y="298" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#a4b4a8" text-anchor="start">The task row says who</text>
+<text x="54.0" y="318" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#a4b4a8" text-anchor="start">holds it, and until when.</text>
+<path d="M243.0 288 h20 m-7 -6 l7 6 l-7 6" fill="none" stroke="#a4b4a8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="267.0" y="246" width="199.0" height="84" rx="10" fill="#0d1410" stroke="#2a382e"/>
+<text x="281.0" y="274" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="16" font-weight="700" fill="#eef4ee" text-anchor="start">Worker dies</text>
+<text x="281.0" y="298" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#a4b4a8" text-anchor="start">The lease stops</text>
+<text x="281.0" y="318" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#a4b4a8" text-anchor="start">being renewed.</text>
+<path d="M470.0 288 h20 m-7 -6 l7 6 l-7 6" fill="none" stroke="#a4b4a8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="494.0" y="246" width="199.0" height="84" rx="10" fill="#0d1410" stroke="#2a382e"/>
+<text x="508.0" y="274" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="16" font-weight="700" fill="#eef4ee" text-anchor="start">Lease expires</text>
+<text x="508.0" y="298" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#a4b4a8" text-anchor="start">A reaper makes the</text>
+<text x="508.0" y="318" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#a4b4a8" text-anchor="start">task claimable.</text>
+<path d="M697.0 288 h20 m-7 -6 l7 6 l-7 6" fill="none" stroke="#a4b4a8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="721.0" y="246" width="199.0" height="84" rx="10" fill="#0d1410" stroke="#2a382e"/>
+<text x="735.0" y="274" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="16" font-weight="700" fill="#eef4ee" text-anchor="start">Another worker</text>
+<text x="735.0" y="298" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#a4b4a8" text-anchor="start">finishes the task.</text>
+<text x="735.0" y="318" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#a4b4a8" text-anchor="start"></text>
+<line x1="40" y1="370" x2="920" y2="370" stroke="#2a382e"/>
+<text x="40" y="400" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="16" font-weight="400" fill="#a4b4a8" text-anchor="start">In the kill test: 17 to 20 tasks were mid-flight per trial. django-ox gave each to another worker,</text>
+<text x="40" y="424" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="16" font-weight="400" fill="#a4b4a8" text-anchor="start">median 17 to 18 s after the kill, longest 22.5 s, with a 15 s lease.</text>
+</svg>
