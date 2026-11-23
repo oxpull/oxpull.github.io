@@ -1,6 +1,6 @@
 # Oxpull
 
-> Oxpull publishes django-ox, a free, open-source (BSD 3-Clause) worker for Django's Tasks framework. The task queue lives in your existing PostgreSQL, MySQL or SQLite database, so there is no broker to run. Current release: django-ox 1.9.1 (2026-10-17).
+> Oxpull publishes django-ox, a free, open-source (BSD 3-Clause) worker for Django's Tasks framework. The task queue lives in your existing PostgreSQL, MySQL or SQLite database, so there is no broker to run. Current release: django-ox 1.10.0 (2026-11-24).
 
 Execution is at-least-once. A worker holds a lease on each task it runs; if the worker dies, the lease expires and another worker finishes the task. Enqueue inside `transaction.atomic()` and the task commits or rolls back with your data.
 
